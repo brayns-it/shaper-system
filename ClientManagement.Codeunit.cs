@@ -90,7 +90,7 @@
         {
             var session = new Session();
             if (!session.Get(CurrentSession.Id))
-                throw session.ErrorNotFound;
+                throw session.ErrorNotFound();
 
             session.UserID.Value = user.ID.Value;
             session.Modify();
