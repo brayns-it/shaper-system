@@ -3,9 +3,10 @@
     public class Session : Table<Session>
     {
         public Fields.Guid ID { get; } = new("ID", Label("ID"));
-        public Fields.Option<Shaper.SessionType> Type { get; } = new("Type", Label("Type"));
+        public Fields.Option<Shaper.SessionTypes> Type { get; } = new("Type", Label("Type"));
         public Fields.Text Address { get; } = new("Address", Label("Address"), 50);
         public Fields.Text Server { get; } = new("Server", Label("Server"), 100);
+        public Fields.Text Environment { get; } = new("Environment", Label("Environment"), 100);
         public Fields.Integer ProcessID { get; } = new("Process ID", Label("Process ID"));
         public Fields.Integer ThreadID { get; } = new("Thread ID", Label("Thread ID"));
         public Fields.DateTime CreationDateTime { get; } = new("Creation date/time", Label("Creation date/time"));

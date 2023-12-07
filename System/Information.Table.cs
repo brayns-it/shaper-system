@@ -14,5 +14,12 @@
             UnitCaption = Label("Information");
             TablePrimaryKey.Add(PK);
         }
+
+        public string GetFooter()
+        {
+            string result = Footer.Value;
+            result = result.Replace("%Y", DateTime.Now.Year.ToString());
+            return result;
+        }
     }
 }

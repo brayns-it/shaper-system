@@ -1,0 +1,123 @@
+﻿namespace Brayns.System
+{
+    [Published]
+    public class ClientManagement : Codeunit
+    {
+        public bool RememberToken { get; set; }
+
+        public class AccessTokenResponse
+        {
+            public string? access_token;
+            public string? token_type;
+            public int? expires_in;
+        }
+
+        [PublicAccess]
+        public void Initialize()
+        {
+            if (!Shaper.Application.IsReady())
+            {
+                var setup = new Shaper.Systems.Setup();
+                setup.Run();
+            }
+            else
+            {
+                if (CurrentSession.UserId.Length == 0)
+                {
+                    var login = new Login();
+                    login.Run();
+                }
+                else
+                {
+                    var start = new Start();
+                    start.Run();
+                }
+            }
+        }
+
+        [PublicAccess]
+        public AccessTokenResponse LoginByID(string userid, string password)
+        {
+            var user = new User();
+            user.ID.SetRange(userid);
+            user.Password.SetRange(user.HashPassword(password));
+            user.Enabled.SetRange(true);
+            if (!user.FindFirst())
+                throw new Error(Label("Invalid ID or password"));
+
+            return AuthenticateUser(user);
+        }
+
+        [PublicAccess]
+        public AccessTokenResponse LoginByEmail(string email, string password)
+        {
+            email = email.Trim();
+            if (email.Length == 0)
+                throw new Error(Label("Invalid e-mail"));
+
+            var user = new User();
+            user.EMail.SetRange(email);
+            user.Enabled.SetRange(true);
+            if (user.Count() > 1)
+                throw new Error(Label("Ambiguous e-mail '{0}'"), email);
+            user.Password.SetRange(user.HashPassword(password));
+            if (!user.FindFirst())
+                throw new Error(Label("Invalid e-mail or password"));
+
+            return AuthenticateUser(user);
+        }
+
+        public void Logout()
+        {
+            if (CurrentSession.AuthenticationId != null)
+            {
+                Authentication auth = new();
+                if (auth.Get(CurrentSession.AuthenticationId!))
+                    auth.Delete();
+            }
+
+            var session = new Session();
+            if (session.Get(CurrentSession.Id))
+                session.Delete();
+
+            CurrentSession.AuthenticationId = null;
+            CurrentSession.UserId = "";
+            Client.ClearAuthenticationToken();
+        }
+
+        private AccessTokenResponse AuthenticateUser(User user)
+        {
+            var session = new Session();
+            if (!session.Get(CurrentSession.Id))
+                throw session.ErrorNotFound();
+
+            session.UserID.Value = user.ID.Value;
+            session.Modify();
+
+            Authentication auth = new();
+            auth.ID.Value = Guid.NewGuid();
+            auth.CreationDateTime.Value = DateTime.Now;
+            if (RememberToken)
+                auth.ExpireDateTime.Value = DateTime.Now.AddDays(30);
+            else
+                auth.ExpireDateTime.Value = DateTime.Now.AddDays(1);
+            auth.UserID.Value = user.ID.Value;
+            auth.Insert();
+
+            DateTimeOffset? exp = null;
+            if (RememberToken)
+                exp = DateTimeOffset.Now.AddDays(30);
+
+            Client.SetAuthenticationToken(auth.ID.Value, exp);
+            CurrentSession.AuthenticationId = auth.ID.Value;
+            CurrentSession.UserId = user.ID.Value;
+
+            return new()
+            {
+                access_token = auth.ID.Value.ToString("n"),
+                token_type = "bearer",
+                expires_in = Convert.ToInt32(auth.ExpireDateTime.Value.Subtract(DateTime.Now).TotalSeconds)
+            };
+        }
+    }
+}

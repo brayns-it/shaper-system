@@ -1,9 +1,12 @@
 ﻿namespace Brayns.System
 {
-    public class UserType : Option<UserType>
+    public class UserTypes 
     {
-        public static readonly UserType USER = New(0, "User");
-        public static readonly UserType DEVICE = New(1, "Device");
+        [Label("User")]
+        public const int USER = 0;
+
+        [Label("Device")]
+        public const int DEVICE = 1;
     }
 
     public class User : Table<User>
@@ -15,7 +18,7 @@
         public Fields.Text Password { get; } = new("Password", Label("Password"), 100);
         public Fields.DateTime LastLogin { get; } = new("Last login", Label("Last login"));
         public Fields.Boolean Superuser { get; } = new("Superuser", Label("Superuser"));
-        public Fields.Option<UserType> Type { get; } = new("Type", Label("Type"));
+        public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
 
         public User()
         {

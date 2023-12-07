@@ -1,7 +1,7 @@
-﻿namespace Brayns.System.Module
+﻿namespace Brayns.System
 {
     [Shaper.Classes.AppModule]
-    public class AppModule : Shaper.Classes.AppModule
+    public class App : Shaper.Classes.AppModule
     {
         private Upgrades upgrades = new();
 
@@ -35,12 +35,17 @@
                     usr.Password.Validate("admin");
                     usr.Enabled.Value = true;
                     usr.Superuser.Value = true;
-                    usr.Type.Value = UserType.USER;
+                    usr.Type.Value = UserTypes.USER;
                     usr.Insert();
                 }
 
                 upgrades.InsertTag("APPS-SYSTEM-INSTALL");
             }
+        }
+
+        public static void Load()
+        {
+            // do nothing, use only to load assembly in the domain
         }
     }
 }
