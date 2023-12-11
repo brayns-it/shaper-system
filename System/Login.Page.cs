@@ -40,7 +40,6 @@
             nfo.Get();
 
             Control<Controls.Group>()!.Caption = nfo.Name.Value;
-            Control<Controls.Footer>()!.Caption = nfo.GetFooter();
         }
 
         private void Login_Triggering()

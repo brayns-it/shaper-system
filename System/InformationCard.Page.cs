@@ -6,6 +6,8 @@
         {
             UnitName = "Information Card";
             UnitCaption = Label("Information");
+            AllowInsert = false;
+            AllowDelete = false;
 
             var content = Controls.ContentArea.Create(this);
             {

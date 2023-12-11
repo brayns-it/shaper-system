@@ -31,12 +31,34 @@
                         {
                             var actInformation = new Controls.Action(actGeneral, Label("Information"), Icon.FromName("fas fa-info-circle"));
                             actInformation.Run = typeof(InformationCard);
+                            actInformation.RunAsPrincipal = true;
                         }
 
                         var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
                         {
-                            var actTokens = new Controls.Action(actAuth, Label("Tokens"), Icon.FromName("fas fa-ticket-alt"));
-                            actTokens.Run = typeof(TokenList);
+                            new Controls.Action(actAuth, Label("Roles"), Icon.FromName("fas fa-user-tag"))
+                            {
+                                Run = typeof(RoleList),
+                                RunAsPrincipal = true
+                            };
+
+                            new Controls.Action(actAuth, Label("Sessions"), Icon.FromName("fas fa-list"))
+                            {
+                                Run = typeof(SessionList),
+                                RunAsPrincipal = true
+                            };
+
+                            new Controls.Action(actAuth, Label("Tokens"), Icon.FromName("fas fa-ticket-alt"))
+                            {
+                                Run = typeof(TokenList),
+                                RunAsPrincipal = true
+                            };
+
+                            new Controls.Action(actAuth, Label("Users"), Icon.FromName("fas fa-user"))
+                            {
+                                Run = typeof(UserList),
+                                RunAsPrincipal = true
+                            };
                         }
                     }
                 }
@@ -57,7 +79,7 @@
                 Control<Controls.Indicator>()!.Caption = nfo.Indicator.Value;
 
             if (ControlExists<Controls.Footer>())
-                Control<Controls.Footer>()!.Caption = nfo.Footer.Value;
+                Control<Controls.Footer>()!.Caption = nfo.GetFooter();
 
             var user = new User();
             user.Get(CurrentSession.UserId);

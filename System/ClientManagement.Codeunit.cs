@@ -87,6 +87,9 @@
             if (!session.Get(CurrentSession.Id))
                 throw session.ErrorNotFound();
 
+            user.LastLogin.Value = DateTime.Now;
+            user.Modify();
+
             session.UserID.Value = user.ID.Value;
             session.Modify();
 
