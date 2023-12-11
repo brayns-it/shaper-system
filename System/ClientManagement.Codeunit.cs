@@ -5,34 +5,30 @@
     {
         public bool RememberToken { get; set; }
 
+        static ClientManagement()
+        {
+            Brayns.Shaper.Systems.ClientManagement.ClientInitializing += ClientManagement_Initializing;
+        }
+
+        private static void ClientManagement_Initializing(Shaper.Systems.ClientManagement sender)
+        {
+            if (CurrentSession.UserId.Length == 0)
+            {
+                var login = new Login();
+                login.Run();
+            }
+            else
+            {
+                var start = new Start();
+                start.Run();
+            }
+        }
+
         public class AccessTokenResponse
         {
             public string? access_token;
             public string? token_type;
             public int? expires_in;
-        }
-
-        [PublicAccess]
-        public void Initialize()
-        {
-            if (!Shaper.Application.IsReady())
-            {
-                var setup = new Shaper.Systems.Setup();
-                setup.Run();
-            }
-            else
-            {
-                if (CurrentSession.UserId.Length == 0)
-                {
-                    var login = new Login();
-                    login.Run();
-                }
-                else
-                {
-                    var start = new Start();
-                    start.Run();
-                }
-            }
         }
 
         [PublicAccess]

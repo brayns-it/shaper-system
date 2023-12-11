@@ -1,15 +1,20 @@
 ﻿namespace Brayns.System
 {
-    [Shaper.Classes.SystemModule]
-    public class SystemModule : Shaper.Classes.SystemModule
+    public class SystemManagement : Codeunit
     {
-        Session session = new() { TableLock = true };
-        Authentication authentication = new();
-        User user = new();
+        static SystemManagement()
+        {
+            Shaper.Application.Initializing += Application_Initializing;
+            Shaper.Session.Starting += Session_Starting;
+            Shaper.Session.Stopping += Session_Stopping;
+            Shaper.Session.Destroying += Session_Destroying;
+        }
 
-        public override void SessionStart()
+        private static void Session_Starting()
         {
             if (CurrentSession.Database == null) return;
+
+            Session session = new() { TableLock = true };
 
             if (!CurrentSession.IsNew)
             {
@@ -32,14 +37,17 @@
             {
                 bool invalid = true;
 
-                authentication.Reset();
+                Authentication authentication = new();
                 authentication.ID.SetRange(CurrentSession.AuthenticationId);
                 if (authentication.FindFirst())
+                {
+                    User user = new();
                     if (user.Get(authentication.UserID.Value))
                     {
                         CurrentSession.UserId = user.ID.Value;
                         invalid = false;
                     }
+                }
 
                 if (invalid)
                     Client.ClearAuthenticationToken();
@@ -70,10 +78,11 @@
             CurrentSession.ApplicationName = nfo.Name.Value;
         }
 
-        public override void SessionStop()
+        private static void Session_Stopping()
         {
             if (CurrentSession.Database == null) return;
 
+            Session session = new() { TableLock = true };
             if (session.Get(CurrentSession.Id))
             {
                 session.Active.Value = false;
@@ -81,19 +90,20 @@
             }
         }
 
-        public override void SessionDestroy()
+        private static void Session_Destroying()
         {
             if (CurrentSession.Database == null) return;
 
+            Session session = new() { TableLock = true };
             if (session.Get(CurrentSession.Id))
                 session.Delete();
         }
 
-        public override void ApplicationStart()
+        private static void Application_Initializing()
         {
             if (CurrentSession.Database == null) return;
 
-            session.Reset();
+            Session session = new();
             session.Environment.SetRange(Shaper.Application.GetEnvironmentName());
             session.Server.SetRange(CurrentSession.Server);
             session.DeleteAll();
@@ -101,9 +111,9 @@
             CleanupAuthentication();
         }
 
-        public void CleanupAuthentication()
+        public static void CleanupAuthentication()
         {
-            authentication.Reset();
+            Authentication authentication = new();
             authentication.ExpireDateTime.SetFilter("<{0}", DateTime.Now);
             authentication.DeleteAll();
             Commit();

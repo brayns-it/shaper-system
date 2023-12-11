@@ -2,11 +2,9 @@
 {
     public class Login : Page<Login>
     {
-        protected Controls.Group Form { get; init; }
-        protected Controls.Footer Footer { get; init; }
-        protected Fields.Text EMail { get; } = new("E-Mail", Label("E-Mail"), 100);
-        protected Fields.Text Password { get; } = new("Password", Label("Password"), 100);
-        protected Fields.Boolean Remember { get; } = new("Remember", Label("Remember"));
+        protected Fields.Text EMail { get; } = new(Label("E-Mail"));
+        protected Fields.Text Password { get; } = new(Label("Password"));
+        protected Fields.Boolean Remember { get; } = new(Label("Remember"));
 
         public Login()
         {
@@ -14,26 +12,35 @@
             UnitCaption = Label("Login");
             PageType = PageTypes.Login;
 
-            var content = new Controls.ContentArea(this);
+            var content = Controls.ContentArea.Create(this);
             {
-                Form = new(content);
+                var form = new Controls.Group(content);
                 {
-                    Form.Primary = true;
-                    Form.LabelOrientation = Controls.LabelOrientation.Vertical;
-                    Form.FieldPerRow = Controls.FieldPerRow.One;
-                    Form.Collapsible = false;
+                    form.Primary = true;
+                    form.LabelOrientation = Controls.LabelOrientation.Vertical;
+                    form.FieldPerRow = Controls.FieldPerRow.One;
+                    form.Collapsible = false;
 
-                    new Controls.Field(Form, EMail);
-                    new Controls.Field(Form, Password) { InputType = Controls.InputType.Password };
-                    new Controls.Field(Form, Remember);
+                    new Controls.Field(form, EMail);
+                    new Controls.Field(form, Password) { InputType = Controls.InputType.Password };
+                    new Controls.Field(form, Remember);
 
-                    var login = new Controls.Action(Form, Label("Login"));
+                    var login = new Controls.Action(form, Label("Login"));
                     login.Triggering += Login_Triggering;
                     login.Shortcut = "Enter";
                 }
             }
 
-            Footer = new(this);
+            Loading += Login_Loading;
+        }
+
+        private void Login_Loading()
+        {
+            var nfo = new Information();
+            nfo.Get();
+
+            Control<Controls.Group>()!.Caption = nfo.Name.Value;
+            Control<Controls.Footer>()!.Caption = nfo.GetFooter();
         }
 
         private void Login_Triggering()
@@ -42,15 +49,6 @@
             clMgmt.RememberToken = Remember.Value;
             clMgmt.LoginByEmail(EMail.Value, Password.Value);
             Client.Reload();
-        }
-
-        protected override void OnLoad()
-        {
-            var nfo = new Information();
-            nfo.Get();
-            Form.Caption = nfo.Name.Value;
-            Footer.Caption = nfo.GetFooter();
-            Remember.Value = true;
         }
     }
 }

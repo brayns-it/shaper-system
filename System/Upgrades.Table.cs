@@ -10,9 +10,11 @@
             UnitName = "Upgrades";
             UnitCaption = Label("Upgrades");
             TablePrimaryKey.Add(Tag);
+
+            Inserting += Upgrades_Inserting;
         }
 
-        protected override void OnInsert()
+        private void Upgrades_Inserting()
         {
             Date_Time.Value = DateTime.Now;
         }

@@ -7,7 +7,7 @@
 
         public override string Author => "Brayns";
         public override string Name => "System";
-        public override Version Version => new Version("1.0.30902.0");
+        public override Version Version => new Version("1.0.31201.0");
         public override Guid Id => new Guid("{7DE54A0D-1A0B-4A80-930F-EDB727D4EC9C}");
 
         public override void Install()
@@ -20,7 +20,7 @@
                     nfo.Init();
                     nfo.Name.Value = "Application";
                     nfo.Description.Value = "My application";
-                    nfo.Footer.Value = "Copyright %Y";
+                    nfo.Footer.Value = "Copyright %Y My Company";
                     nfo.Indicator.Value = "PROD";
                     nfo.Insert();
                 }

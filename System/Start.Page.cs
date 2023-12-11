@@ -1,35 +1,69 @@
 ﻿namespace Brayns.System
 {
-    public class Start : Page<Start>
+    public partial class Start : Page<Start>
     {
-        protected Controls.AppCenter AppCenter { get; init; }
-        protected Controls.Indicator Indicator { get; init; }
-        protected Controls.Notifications Notifications { get; init; }
-        protected Controls.Search Search { get; init; }
-        protected Controls.UserCenter UserCenter { get; init; }
-        protected Controls.Action ActionLogout { get; init; }
-
         public Start()
         {
             UnitName = "Start";
             UnitCaption = Label("Start");
             PageType = PageTypes.Start;
 
-            AppCenter = new(this);
+            var appCenter = Controls.AppCenter.Create(this);
             {
-                Indicator = new(AppCenter);
-                Search = new(AppCenter);
+                Controls.Indicator.Create(appCenter);
+                Controls.Search.Create(appCenter);
                 
-                Notifications = new(AppCenter);
-                Notifications.Getting += Notifications_Getting;
-                Notifications.Triggering += Notifications_Triggering;
+                var notifications = Controls.Notifications.Create(appCenter);
+                notifications.Getting += Notifications_Getting;
+                notifications.Triggering += Notifications_Triggering;
 
-                UserCenter = new(AppCenter);
+                var userCenter = Controls.UserCenter.Create(appCenter);
                 {
-                    ActionLogout = new(UserCenter, Label("Logout"), "fas fa-sign-out-alt");
-                    ActionLogout.Triggering += ActionLogout_Triggering;
+                    var actLogout = new Controls.Action(userCenter, Label("Logout"), Icon.FromName("fas fa-sign-out-alt"));
+                    actLogout.Triggering += ActionLogout_Triggering;
+                }
+
+                var navigationPane = Controls.NavigationPane.Create(appCenter);
+                {
+                    var grpAdmin = new Controls.ActionGroup(navigationPane, Label("Administration"));
+                    {
+                        var actGeneral = new Controls.Action(grpAdmin, Label("General"), Icon.FromName("fas fa-cog"));
+                        {
+                            var actInformation = new Controls.Action(actGeneral, Label("Information"), Icon.FromName("fas fa-info-circle"));
+                            actInformation.Run = typeof(InformationCard);
+                        }
+
+                        var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
+                        {
+                            var actTokens = new Controls.Action(actAuth, Label("Tokens"), Icon.FromName("fas fa-ticket-alt"));
+                            actTokens.Run = typeof(TokenList);
+                        }
+                    }
                 }
             }
+
+            Controls.Footer.Create(this);
+
+            Loading += Start_Loading;
+            Extend();
+        }
+
+        private void Start_Loading()
+        {
+            var nfo = new Information();
+            nfo.Get();
+
+            if (ControlExists<Controls.Indicator>())
+                Control<Controls.Indicator>()!.Caption = nfo.Indicator.Value;
+
+            if (ControlExists<Controls.Footer>())
+                Control<Controls.Footer>()!.Caption = nfo.Footer.Value;
+
+            var user = new User();
+            user.Get(CurrentSession.UserId);
+
+            if (ControlExists<Controls.UserCenter>())
+                Control<Controls.UserCenter>()!.Caption = user.Name.Value;
         }
 
         private void Notifications_Triggering(string notificationID)
@@ -71,17 +105,6 @@
                 clMgmt.Logout();
                 Client.Reload();
             }).RunModal();
-        }
-
-        protected override void OnLoad()
-        {
-            var nfo = new Information();
-            nfo.Get();
-            Indicator.Caption = nfo.Indicator.Value;
-
-            var user = new User();
-            user.Get(CurrentSession.UserId);
-            UserCenter.Caption = user.Name.Value;
         }
     }
 }
