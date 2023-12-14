@@ -19,13 +19,13 @@
         public Fields.Code RoleCode { get; } = new("Role code", Label("Role code"), 10);
         public Fields.Integer LineNo { get; } = new("Line no.", Label("Line no."));
         public Fields.Option<UnitTypes> ObjectType { get; } = new("Object type", Label("Object type"));
-        public Fields.Option<UnitTypes> ObjectName { get; } = new("Object name", Label("Object name"));
+        public Fields.Text ObjectName { get; } = new("Object name", Label("Object name"), 250);
         public Fields.Option<RolePermission> Execution { get; } = new("Execution", Label("Execution"));
 
         public RoleDetail()
         {
-            UnitName = "Role";
-            UnitCaption = Label("Role");
+            TableName = "Role detail";
+            UnitCaption = Label("Role detail");
             TablePrimaryKey.Add(RoleCode, LineNo);
 
             AddRelation<Role>(RoleCode);

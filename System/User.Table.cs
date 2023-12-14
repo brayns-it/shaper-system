@@ -22,7 +22,7 @@
 
         public User()
         {
-            UnitName = "User";
+            TableName = "User";
             UnitCaption = Label("User");
             TablePrimaryKey.Add(ID);
 

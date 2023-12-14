@@ -7,9 +7,18 @@
 
         public Role()
         {
-            UnitName = "Role";
+            TableName = "Role";
             UnitCaption = Label("Role");
             TablePrimaryKey.Add(Code);
+
+            Deleting += Role_Deleting;
+        }
+
+        private void Role_Deleting()
+        {
+            var detail = new RoleDetail();
+            detail.RoleCode.SetRange(Code.Value);
+            detail.DeleteAll();
         }
     }
 }

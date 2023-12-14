@@ -9,7 +9,7 @@
 
         public Authentication()
         {
-            UnitName = "Authentication";
+            TableName = "Authentication";
             UnitCaption = Label("Authentication");
             TablePrimaryKey.Add(ID);
 

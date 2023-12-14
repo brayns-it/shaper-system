@@ -6,7 +6,6 @@
 
         public UserCard()
         {
-            UnitName = "User card";
             UnitCaption = Label("User");
 
             var area = Controls.ContentArea.Create(this);
@@ -22,6 +21,11 @@
                     new Controls.Field(general, Rec.Enabled);
                     new Controls.Field(general, Rec.Superuser);
                 }
+
+                new Controls.Subpage<UserRoleList, UserRole>(area)
+                {
+                    Filter = (tgt) => tgt.UserID.SetRange(Rec.ID.Value)
+                };
             }
         }
     }

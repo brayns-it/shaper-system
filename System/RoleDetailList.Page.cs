@@ -4,8 +4,8 @@
     {
         public RoleDetailList()
         {
-            UnitName = "Role detail list";
             UnitCaption = Label("Role details");
+            Card = typeof(RoleDetailCard);
 
             var area = Controls.ContentArea.Create(this);
             {

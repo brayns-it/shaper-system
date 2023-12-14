@@ -6,7 +6,6 @@
 
         public SessionList()
         {
-            UnitName = "Session list";
             UnitCaption = Label("Sessions");
             AllowInsert = false;
 

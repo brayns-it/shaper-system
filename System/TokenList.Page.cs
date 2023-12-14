@@ -6,7 +6,6 @@
 
         public TokenList()
         {
-            UnitName = "Token list";
             UnitCaption = Label("Authentication Tokens");
             AllowInsert = false;
 

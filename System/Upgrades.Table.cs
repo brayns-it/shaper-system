@@ -7,7 +7,7 @@
 
         public Upgrades()
         {
-            UnitName = "Upgrades";
+            TableName = "Upgrades";
             UnitCaption = Label("Upgrades");
             TablePrimaryKey.Add(Tag);
 

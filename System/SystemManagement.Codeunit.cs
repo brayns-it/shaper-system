@@ -45,6 +45,7 @@
                     if (user.Get(authentication.UserID.Value))
                     {
                         CurrentSession.UserId = user.ID.Value;
+                        CurrentSession.IsSuperuser = user.Superuser.Value;
                         invalid = false;
                     }
                 }
@@ -76,6 +77,37 @@
             var nfo = new Information();
             nfo.Get();
             CurrentSession.ApplicationName = nfo.Name.Value;
+
+            if (CurrentSession.UserId.Length > 0)
+                LoadPermissions();
+        }
+
+        private static void LoadPermissions()
+        {
+            var userRole = new UserRole();
+            userRole.UserID.SetRange(CurrentSession.UserId);
+            if (userRole.FindSet())
+                while (userRole.Read())
+                {
+                    var roleDet = new RoleDetail();
+                    roleDet.RoleCode.SetRange(userRole.RoleCode.Value);
+                    if (roleDet.FindSet())
+                        while (roleDet.Read())
+                        {
+                            switch (roleDet.Execution.Value)
+                            {
+                                case RolePermission.ALLOWED:
+                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.Allow);
+                                    break;
+                                case RolePermission.ALLOWED_INDIRECT:
+                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.AllowIndirect);
+                                    break;
+                                case RolePermission.DENIED:
+                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.Deny);
+                                    break;
+                            }
+                        }
+                }
         }
 
         private static void Session_Stopping()

@@ -4,7 +4,6 @@
     {
         public Start()
         {
-            UnitName = "Start";
             UnitCaption = Label("Start");
             PageType = PageTypes.Start;
 
@@ -29,35 +28,32 @@
                     {
                         var actGeneral = new Controls.Action(grpAdmin, Label("General"), Icon.FromName("fas fa-cog"));
                         {
-                            var actInformation = new Controls.Action(actGeneral, Label("Information"), Icon.FromName("fas fa-info-circle"));
-                            actInformation.Run = typeof(InformationCard);
-                            actInformation.RunAsPrincipal = true;
+                            new Controls.Action(actGeneral, Label("Information"), Icon.FromName("fas fa-info-circle"))
+                            {
+                                Run = typeof(InformationCard)
+                            };
                         }
 
                         var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
                         {
                             new Controls.Action(actAuth, Label("Roles"), Icon.FromName("fas fa-user-tag"))
                             {
-                                Run = typeof(RoleList),
-                                RunAsPrincipal = true
+                                Run = typeof(RoleList)
                             };
 
                             new Controls.Action(actAuth, Label("Sessions"), Icon.FromName("fas fa-list"))
                             {
-                                Run = typeof(SessionList),
-                                RunAsPrincipal = true
+                                Run = typeof(SessionList)
                             };
 
                             new Controls.Action(actAuth, Label("Tokens"), Icon.FromName("fas fa-ticket-alt"))
                             {
-                                Run = typeof(TokenList),
-                                RunAsPrincipal = true
+                                Run = typeof(TokenList)
                             };
 
                             new Controls.Action(actAuth, Label("Users"), Icon.FromName("fas fa-user"))
                             {
-                                Run = typeof(UserList),
-                                RunAsPrincipal = true
+                                Run = typeof(UserList)
                             };
                         }
                     }

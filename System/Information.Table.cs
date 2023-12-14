@@ -10,7 +10,7 @@
 
         public Information()
         {
-            UnitName = "Information";
+            TableName = "Information";
             UnitCaption = Label("Information");
             TablePrimaryKey.Add(PK);
         }

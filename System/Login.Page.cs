@@ -8,7 +8,6 @@
 
         public Login()
         {
-            UnitName = "Login";
             UnitCaption = Label("Login");
             PageType = PageTypes.Login;
 

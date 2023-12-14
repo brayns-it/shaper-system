@@ -4,7 +4,6 @@
     {
         public RoleList()
         {
-            UnitName = "Role list";
             UnitCaption = Label("Roles");
             Card = typeof(RoleCard);
 

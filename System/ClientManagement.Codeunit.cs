@@ -76,9 +76,11 @@
             if (session.Get(CurrentSession.Id))
                 session.Delete();
 
+            Client.ClearAuthenticationToken();
+
             CurrentSession.AuthenticationId = null;
             CurrentSession.UserId = "";
-            Client.ClearAuthenticationToken();
+            CurrentSession.IsSuperuser = false;
         }
 
         private AccessTokenResponse AuthenticateUser(User user)
@@ -108,8 +110,10 @@
                 exp = DateTimeOffset.Now.AddDays(30);
 
             Client.SetAuthenticationToken(auth.ID.Value, exp);
+
             CurrentSession.AuthenticationId = auth.ID.Value;
             CurrentSession.UserId = user.ID.Value;
+            CurrentSession.IsSuperuser = user.Superuser.Value;
 
             return new()
             {

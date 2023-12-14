@@ -4,7 +4,6 @@
     {
         public UserList()
         {
-            UnitName = "User list";
             UnitCaption = Label("Users");
             Card = typeof(UserCard);
 

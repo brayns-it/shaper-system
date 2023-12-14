@@ -4,7 +4,6 @@
     {
         public InformationCard()
         {
-            UnitName = "Information Card";
             UnitCaption = Label("Information");
             AllowInsert = false;
             AllowDelete = false;

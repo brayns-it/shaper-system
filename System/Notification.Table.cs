@@ -11,7 +11,7 @@
 
         public Notification()
         {
-            UnitName = "Notification";
+            TableName = "Notification";
             UnitCaption = Label("Notification");
             TablePrimaryKey.Add(EntryNo);
 

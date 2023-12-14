@@ -4,7 +4,6 @@
     {
         public RoleCard()
         {
-            UnitName = "Role card";
             UnitCaption = Label("Role");
 
             var area = Controls.ContentArea.Create(this);
@@ -14,6 +13,11 @@
                     new Controls.Field(general, Rec.Code);
                     new Controls.Field(general, Rec.Description);
                 }
+
+                new Controls.Subpage<RoleDetailList, RoleDetail>(area)
+                {
+                    Filter = (target) => target.RoleCode.SetRange(Rec.Code.Value)
+                };
             }
         }
     }

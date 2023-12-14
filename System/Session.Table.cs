@@ -17,7 +17,7 @@
 
         public Session()
         {
-            UnitName = "Session";
+            TableName = "Session";
             UnitCaption = Label("Session");
             TablePrimaryKey.Add(ID);
 
