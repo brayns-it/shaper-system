@@ -76,6 +76,8 @@
             if (session.Get(CurrentSession.Id))
                 session.Delete();
 
+            Shaper.Loader.Permissions.Clear();
+
             Client.ClearAuthenticationToken();
 
             CurrentSession.AuthenticationId = null;

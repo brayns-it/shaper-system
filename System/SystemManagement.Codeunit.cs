@@ -78,12 +78,14 @@
             nfo.Get();
             CurrentSession.ApplicationName = nfo.Name.Value;
 
-            if (CurrentSession.UserId.Length > 0)
+            if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
                 LoadPermissions();
         }
 
         private static void LoadPermissions()
         {
+            List<Shaper.Loader.Permission> perms = new();
+
             var userRole = new UserRole();
             userRole.UserID.SetRange(CurrentSession.UserId);
             if (userRole.FindSet())
@@ -97,17 +99,19 @@
                             switch (roleDet.Execution.Value)
                             {
                                 case RolePermission.ALLOWED:
-                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.Allow);
+                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.Allow));
                                     break;
                                 case RolePermission.ALLOWED_INDIRECT:
-                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.AllowIndirect);
+                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.AllowIndirect));
                                     break;
                                 case RolePermission.DENIED:
-                                    CurrentSession.AddPermission(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.PermissionType.Execute, Shaper.PermissionMode.Deny);
+                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.Deny));
                                     break;
                             }
                         }
                 }
+
+            Shaper.Loader.Permissions.Set(perms);
         }
 
         private static void Session_Stopping()

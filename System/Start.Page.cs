@@ -56,6 +56,14 @@
                                 Run = typeof(UserList)
                             };
                         }
+
+                        var actSystem = new Controls.Action(grpAdmin, Label("System"), Icon.FromName("fas fa-microchip"));
+                        {
+                            new Controls.Action(actSystem, Label("Administration"), Icon.FromName("fas fa-tools"))
+                            {
+                                Run = typeof(Shaper.Systems.Admin)
+                            };
+                        }
                     }
                 }
             }
@@ -121,6 +129,7 @@
             {
                 var clMgmt = new ClientManagement();
                 clMgmt.Logout();
+                
                 Client.Reload();
             }).RunModal();
         }
