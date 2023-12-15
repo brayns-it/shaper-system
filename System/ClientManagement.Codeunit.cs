@@ -38,8 +38,18 @@
             user.ID.SetRange(userid);
             user.Password.SetRange(user.HashPassword(password));
             user.Enabled.SetRange(true);
+
             if (!user.FindFirst())
-                throw new Error(Label("Invalid ID or password"));
+            {
+                user.Password.SetRange("plain:" + password);
+                if (!user.FindFirst())
+                    throw new Error(Label("Invalid ID or password"));
+                else
+                {
+                    user.Password.Validate(password);
+                    user.Modify();
+                }
+            }
 
             return AuthenticateUser(user);
         }
@@ -55,10 +65,20 @@
             user.EMail.SetRange(email);
             user.Enabled.SetRange(true);
             if (user.Count() > 1)
-                throw new Error(Label("Ambiguous e-mail '{0}'"), email);
+                throw new Error(Label("Ambiguous e-mail '{0}'", email));
             user.Password.SetRange(user.HashPassword(password));
+
             if (!user.FindFirst())
-                throw new Error(Label("Invalid e-mail or password"));
+            {
+                user.Password.SetRange("plain:" + password);
+                if (!user.FindFirst())
+                    throw new Error(Label("Invalid e-mail or password"));
+                else
+                {
+                    user.Password.Validate(password);
+                    user.Modify();
+                }
+            }
 
             return AuthenticateUser(user);
         }

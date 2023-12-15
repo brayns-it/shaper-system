@@ -9,7 +9,7 @@
         public const int DEVICE = 1;
     }
 
-    public class User : Table<User>
+    public partial class User : Table<User>
     {
         public Fields.Code ID { get; } = new("ID", Label("ID"), 50);
         public Fields.Text Name { get; } = new("Name", Label("Name"), 50);
@@ -27,6 +27,8 @@
             TablePrimaryKey.Add(ID);
 
             Password.Validating += Password_Validating;
+
+            Extend();
         }
 
         private void Password_Validating()
