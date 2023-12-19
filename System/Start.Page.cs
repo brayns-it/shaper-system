@@ -24,9 +24,9 @@
 
                 var navigationPane = Controls.NavigationPane.Create(appCenter);
                 {
-                    var grpAdmin = new Controls.ActionGroup(navigationPane, Label("Administration"));
+                    var grpAdmin = new Controls.ActionGroup(navigationPane, "group-admin", Label("Administration"));
                     {
-                        var actGeneral = new Controls.Action(grpAdmin, Label("General"), Icon.FromName("fas fa-cog"));
+                        var actGeneral = new Controls.Action(grpAdmin, "admin-general", Label("General"), Icon.FromName("fas fa-cog"));
                         {
                             new Controls.Action(actGeneral, Label("Information"), Icon.FromName("fas fa-info-circle"))
                             {
@@ -63,6 +63,11 @@
                             {
                                 Run = typeof(Shaper.Systems.Admin)
                             };
+
+                            new Controls.Action(actSystem, Label("Setup"), Icon.FromName("fas fa-wrench"))
+                            {
+                                Run = typeof(Shaper.Systems.Setup)
+                            };
                         }
                     }
                 }
@@ -72,6 +77,8 @@
 
             Loading += Start_Loading;
             Extend();
+
+            Control("group-admin")!.MoveLast();
         }
 
         private void Start_Loading()
@@ -90,6 +97,9 @@
 
             if (ControlExists<Controls.UserCenter>())
                 Control<Controls.UserCenter>()!.Caption = user.Name.Value;
+
+            if (ControlExists<Controls.NavigationPane>())
+                Control<Controls.NavigationPane>()!.Caption = user.Name.Value;
         }
 
         private void Notifications_Triggering(string notificationID)
