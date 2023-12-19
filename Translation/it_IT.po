@@ -1,0 +1,420 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+
+msgctxt "Brayns.System.Authentication"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "Brayns.System.Authentication"
+msgid "User ID"
+msgstr "ID utente"
+
+msgctxt "Brayns.System.Authentication"
+msgid "Creation date/time"
+msgstr "Data/ora creazione"
+
+msgctxt "Brayns.System.Authentication"
+msgid "Expire  date/time"
+msgstr "Data/ora scadenza"
+
+msgctxt "Brayns.System.Authentication"
+msgid "Authentication"
+msgstr "Autenticazione"
+
+msgctxt "Brayns.System.AccessTokenResponse"
+msgid "Invalid ID or password"
+msgstr "ID o password non valida"
+
+msgctxt "Brayns.System.AccessTokenResponse"
+msgid "Invalid e-mail"
+msgstr "E-Mail non valida"
+
+msgctxt "Brayns.System.AccessTokenResponse"
+msgid "Ambiguous e-mail '{0}'"
+msgstr "E-Mail ambigua '{0}'"
+
+msgctxt "Brayns.System.AccessTokenResponse"
+msgid "Invalid e-mail or password"
+msgstr "E-Mail o password non valida"
+
+msgctxt "Brayns.System.Information"
+msgid "PK"
+msgstr "PK"
+
+msgctxt "Brayns.System.Information"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "Brayns.System.Information"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "Brayns.System.Information"
+msgid "Footer"
+msgstr "Piè pagina"
+
+msgctxt "Brayns.System.Information"
+msgid "Indicator"
+msgstr "Indicatore"
+
+msgctxt "Brayns.System.Information"
+msgid "Information"
+msgstr "Informazioni"
+
+msgctxt "Brayns.System.InformationCard"
+msgid "Information"
+msgstr "Informazioni"
+
+msgctxt "Brayns.System.InformationCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.Login"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "Brayns.System.Login"
+msgid "E-Mail"
+msgstr "E-Mail"
+
+msgctxt "Brayns.System.Login"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "Brayns.System.Login"
+msgid "Remember"
+msgstr "Ricordami"
+
+msgctxt "Brayns.System.Login"
+msgid "Login"
+msgstr "Login"
+
+msgctxt "Brayns.System.Notification"
+msgid "Entry No."
+msgstr "Nr. movimento"
+
+msgctxt "Brayns.System.Notification"
+msgid "User ID"
+msgstr "ID utente"
+
+msgctxt "Brayns.System.Notification"
+msgid "Title"
+msgstr "Titolo"
+
+msgctxt "Brayns.System.Notification"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "Brayns.System.Notification"
+msgid "Is read"
+msgstr "Letto"
+
+msgctxt "Brayns.System.Notification"
+msgid "Creation date/time"
+msgstr "Data/ora creazione"
+
+msgctxt "Brayns.System.Notification"
+msgid "Notification"
+msgstr "Notifica"
+
+msgctxt "Brayns.System.Role"
+msgid "Code"
+msgstr "Codice"
+
+msgctxt "Brayns.System.Role"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "Brayns.System.Role"
+msgid "Role"
+msgstr "Ruolo"
+
+msgctxt "Brayns.System.RoleCard"
+msgid "Role"
+msgstr "Ruolo"
+
+msgctxt "Brayns.System.RoleCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.RolePermission"
+msgid "Allowed"
+msgstr "Consentito"
+
+msgctxt "Brayns.System.RolePermission"
+msgid "Allowed (indirect)"
+msgstr "Consentito (indiretto)"
+
+msgctxt "Brayns.System.RolePermission"
+msgid "Denied"
+msgstr "Negato"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Role code"
+msgstr "Codice ruolo"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Line no."
+msgstr "Nr. riga"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Object type"
+msgstr "Tipo oggetto"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Object name"
+msgstr "Nome oggetto"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Execution"
+msgstr "Esecuzione"
+
+msgctxt "Brayns.System.RoleDetail"
+msgid "Role detail"
+msgstr "Dettaglio ruolo"
+
+msgctxt "Brayns.System.RoleDetailCard"
+msgid "Role detail"
+msgstr "Dettaglio ruolo"
+
+msgctxt "Brayns.System.RoleDetailCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.RoleDetailList"
+msgid "Role details"
+msgstr "Dettagli ruolo"
+
+msgctxt "Brayns.System.RoleList"
+msgid "Roles"
+msgstr "Ruoli"
+
+msgctxt "Brayns.System.Session"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "Brayns.System.Session"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "Brayns.System.Session"
+msgid "Address"
+msgstr "Indirizzo"
+
+msgctxt "Brayns.System.Session"
+msgid "Server"
+msgstr "Server"
+
+msgctxt "Brayns.System.Session"
+msgid "Environment"
+msgstr "Ambiente"
+
+msgctxt "Brayns.System.Session"
+msgid "Process ID"
+msgstr "ID processo"
+
+msgctxt "Brayns.System.Session"
+msgid "Thread ID"
+msgstr "ID thread"
+
+msgctxt "Brayns.System.Session"
+msgid "Creation date/time"
+msgstr "Data/ora creazione"
+
+msgctxt "Brayns.System.Session"
+msgid "Last date/time"
+msgstr "Ultima data/ora"
+
+msgctxt "Brayns.System.Session"
+msgid "User ID"
+msgstr "ID utente"
+
+msgctxt "Brayns.System.Session"
+msgid "Database ID"
+msgstr "ID database"
+
+msgctxt "Brayns.System.Session"
+msgid "Active"
+msgstr "Attivo"
+
+msgctxt "Brayns.System.Session"
+msgid "Session"
+msgstr "Sessione"
+
+msgctxt "Brayns.System.SessionList"
+msgid "Session ID"
+msgstr "ID sessione"
+
+msgctxt "Brayns.System.SessionList"
+msgid "Sessions"
+msgstr "Sessioni"
+
+msgctxt "Brayns.System.Start"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "Brayns.System.Start"
+msgid "Logout"
+msgstr "Disconnetti"
+
+msgctxt "Brayns.System.Start"
+msgid "Administration"
+msgstr "Amministrazione"
+
+msgctxt "Brayns.System.Start"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.Start"
+msgid "Information"
+msgstr "Informazioni"
+
+msgctxt "Brayns.System.Start"
+msgid "Authentication"
+msgstr "Autenticazione"
+
+msgctxt "Brayns.System.Start"
+msgid "Roles"
+msgstr "Ruoli"
+
+msgctxt "Brayns.System.Start"
+msgid "Sessions"
+msgstr "Sessioni"
+
+msgctxt "Brayns.System.Start"
+msgid "Tokens"
+msgstr "Tokens"
+
+msgctxt "Brayns.System.Start"
+msgid "Users"
+msgstr "Utenti"
+
+msgctxt "Brayns.System.Start"
+msgid "System"
+msgstr "Sistema"
+
+msgctxt "Brayns.System.Start"
+msgid "Setup"
+msgstr "Setup"
+
+msgctxt "Brayns.System.Start"
+msgid "Logout from {0}?"
+msgstr "Disconnettersi da {0}?"
+
+msgctxt "Brayns.System.TokenList"
+msgid "Token"
+msgstr "Token"
+
+msgctxt "Brayns.System.TokenList"
+msgid "Authentication Tokens"
+msgstr "Token autenticazione"
+
+msgctxt "Brayns.System.Upgrades"
+msgid "Tag"
+msgstr "Tag"
+
+msgctxt "Brayns.System.Upgrades"
+msgid "Date/time"
+msgstr "Data/ora"
+
+msgctxt "Brayns.System.Upgrades"
+msgid "Upgrades"
+msgstr "Aggiornamenti"
+
+msgctxt "Brayns.System.UserTypes"
+msgid "User"
+msgstr "Utente"
+
+msgctxt "Brayns.System.UserTypes"
+msgid "Device"
+msgstr "Dispositivo"
+
+msgctxt "Brayns.System.User"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "Brayns.System.User"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "Brayns.System.User"
+msgid "E-Mail"
+msgstr "E-Mail"
+
+msgctxt "Brayns.System.User"
+msgid "Enabled"
+msgstr "Abilitato"
+
+msgctxt "Brayns.System.User"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "Brayns.System.User"
+msgid "Last login"
+msgstr "Ultimo login"
+
+msgctxt "Brayns.System.User"
+msgid "Superuser"
+msgstr "Superuser"
+
+msgctxt "Brayns.System.User"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "Brayns.System.User"
+msgid "User"
+msgstr "Utente"
+
+msgctxt "Brayns.System.UserCard"
+msgid "Token"
+msgstr "Token"
+
+msgctxt "Brayns.System.UserCard"
+msgid "User"
+msgstr "Utente"
+
+msgctxt "Brayns.System.UserCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.UserList"
+msgid "Users"
+msgstr "Utenti"
+
+msgctxt "Brayns.System.UserRole"
+msgid "User ID"
+msgstr "ID utente"
+
+msgctxt "Brayns.System.UserRole"
+msgid "Role code"
+msgstr "Codice ruolo"
+
+msgctxt "Brayns.System.UserRole"
+msgid "User role"
+msgstr "Ruolo utente"
+
+msgctxt "Brayns.System.UserRoleCard"
+msgid "User role"
+msgstr "Ruolo utente"
+
+msgctxt "Brayns.System.UserRoleCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.UserRoleList"
+msgid "User roles"
+msgstr "Ruoli utente"
+
+#~ msgctxt "Brayns.System.Start"
+#~ msgid "Admin"
+#~ msgstr "Admin"
