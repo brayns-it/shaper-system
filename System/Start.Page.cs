@@ -64,6 +64,11 @@
                                 Run = typeof(Shaper.Systems.Admin)
                             };
 
+                            new Controls.Action(actSystem, Label("Log"), Icon.FromName("fas fa-list"))
+                            {
+                                Run = typeof(ApplicationLogList)
+                            };
+
                             new Controls.Action(actSystem, Label("Setup"), Icon.FromName("fas fa-wrench"))
                             {
                                 Run = typeof(Shaper.Systems.Setup)

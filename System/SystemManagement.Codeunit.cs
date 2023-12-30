@@ -5,9 +5,25 @@
         static SystemManagement()
         {
             Shaper.Application.Initializing += Application_Initializing;
+            Shaper.Application.SessionCleaning += Application_SessionCleaning;
             Shaper.Session.Starting += Session_Starting;
             Shaper.Session.Stopping += Session_Stopping;
             Shaper.Session.Destroying += Session_Destroying;
+        }
+
+        private static void Application_SessionCleaning(List<Guid> sessionsIds)
+        {
+            CleanupAuthentication();
+
+            Session session = new() { TableLock = true };
+            foreach (var id in sessionsIds)
+            {
+                if (session.Get(id))
+                {
+                    session.Delete();
+                    Commit();
+                }
+            }
         }
 
         private static void Session_Starting()
@@ -31,8 +47,6 @@
                 return;
             }
 
-            CleanupAuthentication();
-
             if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId != Guid.Empty))
             {
                 bool invalid = true;
@@ -47,6 +61,12 @@
                         CurrentSession.UserId = user.ID.Value;
                         CurrentSession.IsSuperuser = user.Superuser.Value;
                         invalid = false;
+
+                        using (ApplicationLog log = new())
+                        {
+                            log.Connect();
+                            log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
+                        }
                     }
                 }
 

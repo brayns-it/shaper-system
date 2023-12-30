@@ -43,7 +43,15 @@
             {
                 user.Password.SetRange("plain:" + password);
                 if (!user.FindFirst())
+                {
+                    using (ApplicationLog log = new())
+                    {
+                        log.Connect();
+                        log.Add(ApplicationLogType.SECURITY, Label("User ID {0} failed login", userid));
+                    }
+
                     throw new Error(Label("Invalid ID or password"));
+                }
                 else
                 {
                     user.Password.Validate(password);
@@ -72,7 +80,15 @@
             {
                 user.Password.SetRange("plain:" + password);
                 if (!user.FindFirst())
+                {
+                    using (ApplicationLog log = new())
+                    {
+                        log.Connect();
+                        log.Add(ApplicationLogType.SECURITY, Label("User e-mail {0} failed login", email));
+                    }
+
                     throw new Error(Label("Invalid e-mail or password"));
+                }
                 else
                 {
                     user.Password.Validate(password);
@@ -136,6 +152,12 @@
             CurrentSession.AuthenticationId = auth.ID.Value;
             CurrentSession.UserId = user.ID.Value;
             CurrentSession.IsSuperuser = user.Superuser.Value;
+
+            using (ApplicationLog log = new())
+            {
+                log.Connect();
+                log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
+            }
 
             return new()
             {
