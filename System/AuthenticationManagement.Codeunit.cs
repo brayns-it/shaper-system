@@ -1,17 +1,33 @@
-﻿using System.DirectoryServices.AccountManagement;
+﻿using System.DirectoryServices.Protocols;
+using System.Net;
 
 namespace Brayns.System
 {
     public class AuthenticationManagement : Codeunit
     {
-        public bool ValidateActiveDirectory(string username, string password, string domain)
+        public bool ValidateActiveDirectory(string username, string password, string serverName)
         {
-#pragma warning disable CA1416
-            using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
+            LdapDirectoryIdentifier identifier = new LdapDirectoryIdentifier(serverName, 636);
+            NetworkCredential creds = new NetworkCredential(username, password);
+            LdapConnection connection = new LdapConnection(identifier)
             {
-                return pc.ValidateCredentials(username, password);
+                AuthType = AuthType.Basic,
+                SessionOptions =
+                {
+                    ProtocolVersion = 3,
+                    SecureSocketLayer = true
+                }
+            };
+            connection.SessionOptions.VerifyServerCertificate += (s, c) => true;
+            try
+            {
+                connection.Bind(creds);
+                return true;
             }
-#pragma warning restore CA1416
+            catch
+            {
+                return false;
+            }
         }
 
         public Error ErrorInvalidCredentials(string userid)
@@ -44,13 +60,18 @@ namespace Brayns.System
 
             var provider = new AuthenticationProvider();
             provider.Get(user.AuthenticationProvider.Value);
+
+            if (provider.ProviderType.Value != AuthenticationProviderType.NONE)
+                if (user.AuthenticationID.Value.Length == 0)
+                    throw ErrorInvalidCredentials(user.ID.Value);
+
             switch (provider.ProviderType.Value)
             {
                 case AuthenticationProviderType.NONE:
                     throw ErrorInvalidCredentials(user.ID.Value);
 
                 case AuthenticationProviderType.ACTIVE_DIRECTORY:
-                    if (!ValidateActiveDirectory(user.ID.Value, password, provider.AdDomain.Value))
+                    if (!ValidateActiveDirectory(user.AuthenticationID.Value, password, provider.AdServer.Value))
                         throw ErrorInvalidCredentials(user.ID.Value);
                     return;
             }

@@ -11,6 +11,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Shaper\n"
 
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Information"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Warning"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Error"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Security"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Entry no."
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Event date/time"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Log type"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Message"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "User ID"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Address"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Application log"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLogList"
+msgid "Application log"
+msgstr ""
+
 msgctxt "Brayns.System.Authentication"
 msgid "ID"
 msgstr ""
@@ -31,20 +79,92 @@ msgctxt "Brayns.System.Authentication"
 msgid "Authentication"
 msgstr ""
 
-msgctxt "Brayns.System.AccessTokenResponse"
-msgid "Invalid ID or password"
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "User {0} failed login"
 msgstr ""
 
-msgctxt "Brayns.System.AccessTokenResponse"
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "Invalid user or password"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "Invalid ID"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Invalid e-mail"
 msgstr ""
 
-msgctxt "Brayns.System.AccessTokenResponse"
+msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Ambiguous e-mail '{0}'"
 msgstr ""
 
+msgctxt "Brayns.System.AuthenticationProviderType"
+msgid "Active Directory"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Code"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Description"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Provider type"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "AD server"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Authentication provider"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "User name"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Password"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Authentication provider"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "General"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Active Directory"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Server name"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Try authentication"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "AD authentication successful"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "AD authentication failed"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationProviderList"
+msgid "Authentication providers"
+msgstr ""
+
 msgctxt "Brayns.System.AccessTokenResponse"
-msgid "Invalid e-mail or password"
+msgid "User logged in"
 msgstr ""
 
 msgctxt "Brayns.System.Information"
@@ -292,6 +412,10 @@ msgid "Sessions"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
+msgid "Providers"
+msgstr ""
+
+msgctxt "Brayns.System.Start"
 msgid "Tokens"
 msgstr ""
 
@@ -304,11 +428,19 @@ msgid "System"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
+msgid "Log"
+msgstr ""
+
+msgctxt "Brayns.System.Start"
 msgid "Setup"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
 msgid "Logout from {0}?"
+msgstr ""
+
+msgctxt "Brayns.System.SystemManagement"
+msgid "User logged in (token)"
 msgstr ""
 
 msgctxt "Brayns.System.TokenList"
@@ -372,6 +504,14 @@ msgid "Type"
 msgstr ""
 
 msgctxt "Brayns.System.User"
+msgid "Authentication provider"
+msgstr ""
+
+msgctxt "Brayns.System.User"
+msgid "Authentication ID"
+msgstr ""
+
+msgctxt "Brayns.System.User"
 msgid "User"
 msgstr ""
 
@@ -385,6 +525,10 @@ msgstr ""
 
 msgctxt "Brayns.System.UserCard"
 msgid "General"
+msgstr ""
+
+msgctxt "Brayns.System.UserCard"
+msgid "External authentication"
 msgstr ""
 
 msgctxt "Brayns.System.UserList"

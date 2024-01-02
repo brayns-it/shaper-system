@@ -20,6 +20,7 @@
         public Fields.Boolean Superuser { get; } = new("Superuser", Label("Superuser"));
         public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
         public Fields.Code AuthenticationProvider { get; } = new("Authentication provider", Label("Authentication provider"), 10);
+        public Fields.Text AuthenticationID { get; } = new("Authentication ID", Label("Authentication ID"), 100);
 
         public User()
         {

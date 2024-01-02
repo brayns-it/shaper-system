@@ -11,6 +11,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.1\n"
 
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Information"
+msgstr "Informazione"
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Warning"
+msgstr "Attenzione"
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Error"
+msgstr "Errore"
+
+msgctxt "Brayns.System.ApplicationLogType"
+msgid "Security"
+msgstr "Sicurezza"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Entry no."
+msgstr "Nr. movimento"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Event date/time"
+msgstr "Data/ora evento"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Log type"
+msgstr "Tipo log"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Message"
+msgstr "Messaggio"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "User ID"
+msgstr "ID utente"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Address"
+msgstr "Indirizzo"
+
+msgctxt "Brayns.System.ApplicationLog"
+msgid "Application log"
+msgstr "Log applicazione"
+
+msgctxt "Brayns.System.ApplicationLogList"
+msgid "Application log"
+msgstr "Log applicazione"
+
 msgctxt "Brayns.System.Authentication"
 msgid "ID"
 msgstr "ID"
@@ -31,21 +79,93 @@ msgctxt "Brayns.System.Authentication"
 msgid "Authentication"
 msgstr "Autenticazione"
 
-msgctxt "Brayns.System.AccessTokenResponse"
-msgid "Invalid ID or password"
-msgstr "ID o password non valida"
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "User {0} failed login"
+msgstr "Utente {0} login fallito"
 
-msgctxt "Brayns.System.AccessTokenResponse"
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "Invalid user or password"
+msgstr "Utente o password non valida"
+
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "Invalid ID"
+msgstr "ID non valido"
+
+msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Invalid e-mail"
 msgstr "E-Mail non valida"
 
-msgctxt "Brayns.System.AccessTokenResponse"
+msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Ambiguous e-mail '{0}'"
 msgstr "E-Mail ambigua '{0}'"
 
+msgctxt "Brayns.System.AuthenticationProviderType"
+msgid "Active Directory"
+msgstr "Active Directory"
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Code"
+msgstr "Codice"
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Provider type"
+msgstr "Tipo provider"
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "AD server"
+msgstr "Server AD"
+
+msgctxt "Brayns.System.AuthenticationProvider"
+msgid "Authentication provider"
+msgstr "Provider autenticazione"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "User name"
+msgstr "Nome utente"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Authentication provider"
+msgstr "Provider autenticazione"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Active Directory"
+msgstr "Active Directory"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Server name"
+msgstr "Nome server"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "Try authentication"
+msgstr "Prova autenticazione"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "AD authentication successful"
+msgstr "Autenticazione AD avvenuta con successo"
+
+msgctxt "Brayns.System.AuthenticationProviderCard"
+msgid "AD authentication failed"
+msgstr "Autenticazione AD fallita"
+
+msgctxt "Brayns.System.AuthenticationProviderList"
+msgid "Authentication providers"
+msgstr "Provider autenticazione"
+
 msgctxt "Brayns.System.AccessTokenResponse"
-msgid "Invalid e-mail or password"
-msgstr "E-Mail o password non valida"
+msgid "User logged in"
+msgstr "Utente autenticato"
 
 msgctxt "Brayns.System.Information"
 msgid "PK"
@@ -292,6 +412,10 @@ msgid "Sessions"
 msgstr "Sessioni"
 
 msgctxt "Brayns.System.Start"
+msgid "Providers"
+msgstr "Provider"
+
+msgctxt "Brayns.System.Start"
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -304,12 +428,20 @@ msgid "System"
 msgstr "Sistema"
 
 msgctxt "Brayns.System.Start"
+msgid "Log"
+msgstr "Log"
+
+msgctxt "Brayns.System.Start"
 msgid "Setup"
 msgstr "Setup"
 
 msgctxt "Brayns.System.Start"
 msgid "Logout from {0}?"
 msgstr "Disconnettersi da {0}?"
+
+msgctxt "Brayns.System.SystemManagement"
+msgid "User logged in (token)"
+msgstr "Utente autenticato (token)"
 
 msgctxt "Brayns.System.TokenList"
 msgid "Token"
@@ -372,6 +504,14 @@ msgid "Type"
 msgstr "Tipo"
 
 msgctxt "Brayns.System.User"
+msgid "Authentication provider"
+msgstr "Provider autenticazione"
+
+msgctxt "Brayns.System.User"
+msgid "Authentication ID"
+msgstr "ID autenticazione"
+
+msgctxt "Brayns.System.User"
 msgid "User"
 msgstr "Utente"
 
@@ -386,6 +526,10 @@ msgstr "Utente"
 msgctxt "Brayns.System.UserCard"
 msgid "General"
 msgstr "Generale"
+
+msgctxt "Brayns.System.UserCard"
+msgid "External authentication"
+msgstr "Autenticazione esterna"
 
 msgctxt "Brayns.System.UserList"
 msgid "Users"
@@ -414,6 +558,10 @@ msgstr "Generale"
 msgctxt "Brayns.System.UserRoleList"
 msgid "User roles"
 msgstr "Ruoli utente"
+
+#~ msgctxt "Brayns.System.AccessTokenResponse"
+#~ msgid "Invalid e-mail or password"
+#~ msgstr "E-Mail o password non valida"
 
 #~ msgctxt "Brayns.System.Start"
 #~ msgid "Admin"

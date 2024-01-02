@@ -20,7 +20,7 @@
 
                 var ad = new Controls.Group(area, Label("Active Directory"));
                 {
-                    new Controls.Field(ad, Rec.AdDomain) { Caption = Label("Domain name") };
+                    new Controls.Field(ad, Rec.AdServer) { Caption = Label("Server name") };
                     new Controls.Field(ad, AdUser);
                     new Controls.Field(ad, AdPassword) { InputType = Shaper.Controls.InputType.Password };
 
@@ -33,7 +33,7 @@
         private void TryAdAuth_Triggering()
         {
             var authMgmt = new AuthenticationManagement();
-            if (authMgmt.ValidateActiveDirectory(AdUser.Value, AdPassword.Value, Rec.AdDomain.Value))
+            if (authMgmt.ValidateActiveDirectory(AdUser.Value, AdPassword.Value, Rec.AdServer.Value))
                 new Message(Label("AD authentication successful")).RunModal();
             else
                 throw new Error(Label("AD authentication failed"));

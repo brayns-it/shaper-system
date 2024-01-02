@@ -14,7 +14,7 @@
         public Fields.Text Description { get; } = new("Description", Label("Description"), 30);
         public Fields.Option<AuthenticationProviderType> ProviderType { get; } = new("Provider type", Label("Provider type"));
 
-        public Fields.Text AdDomain { get; } = new("AD domain", Label("AD domain"), 100);
+        public Fields.Text AdServer { get; } = new("AD server", Label("AD server"), 100);
 
         public AuthenticationProvider()
         {
