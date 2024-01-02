@@ -8,6 +8,7 @@
         {
             UnitCaption = Label("Authentication Tokens");
             AllowInsert = false;
+            AllowModify = false;
 
             var area = Controls.ContentArea.Create(this);
             {

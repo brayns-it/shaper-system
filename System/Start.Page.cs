@@ -46,6 +46,11 @@
                                 Run = typeof(SessionList)
                             };
 
+                            new Controls.Action(actAuth, Label("Providers"), Icon.FromName("fas fa-key"))
+                            {
+                                Run = typeof(AuthenticationProviderList)
+                            };
+
                             new Controls.Action(actAuth, Label("Tokens"), Icon.FromName("fas fa-ticket-alt"))
                             {
                                 Run = typeof(TokenList)

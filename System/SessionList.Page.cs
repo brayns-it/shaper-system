@@ -8,6 +8,8 @@
         {
             UnitCaption = Label("Sessions");
             AllowInsert = false;
+            AllowDelete = false;
+            AllowModify = false;
 
             var area = Controls.ContentArea.Create(this);
             {

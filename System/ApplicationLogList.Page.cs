@@ -16,6 +16,7 @@
                     new Controls.Field(grid, Rec.EventDateTime);
                     new Controls.Field(grid, Rec.LogType);
                     new Controls.Field(grid, Rec.UserID);
+                    new Controls.Field(grid, Rec.Address);
                     new Controls.Field(grid, Rec.Message);
                 }
             }

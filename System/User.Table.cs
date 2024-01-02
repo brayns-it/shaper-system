@@ -19,12 +19,15 @@
         public Fields.DateTime LastLogin { get; } = new("Last login", Label("Last login"));
         public Fields.Boolean Superuser { get; } = new("Superuser", Label("Superuser"));
         public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
+        public Fields.Code AuthenticationProvider { get; } = new("Authentication provider", Label("Authentication provider"), 10);
 
         public User()
         {
             TableName = "User";
             UnitCaption = Label("User");
             TablePrimaryKey.Add(ID);
+
+            AddRelation<AuthenticationProvider>(AuthenticationProvider);
 
             Password.Validating += Password_Validating;
 

@@ -58,15 +58,19 @@
                     User user = new();
                     if (user.Get(authentication.UserID.Value))
                     {
+                        user.LastLogin.Value = DateTime.Now;
+                        user.Modify();
+
                         CurrentSession.UserId = user.ID.Value;
                         CurrentSession.IsSuperuser = user.Superuser.Value;
                         invalid = false;
 
-                        using (ApplicationLog log = new())
-                        {
-                            log.Connect();
-                            log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
-                        }
+                        if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
+                            using (ApplicationLog log = new())
+                            {
+                                log.Connect();
+                                log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
+                            }
                     }
                 }
 
@@ -167,7 +171,7 @@
             CleanupAuthentication();
         }
 
-        public static void CleanupAuthentication()
+        private static void CleanupAuthentication()
         {
             Authentication authentication = new();
             authentication.ExpireDateTime.SetFilter("<{0}", DateTime.Now);

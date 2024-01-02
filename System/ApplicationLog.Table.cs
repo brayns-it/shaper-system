@@ -22,6 +22,7 @@
         public Fields.Option<ApplicationLogType> LogType { get; } = new("Log type", Label("Log type"));
         public Fields.Text Message { get; } = new("Message", Label("Message"), 200);
         public Fields.Code UserID { get; } = new("User ID", Label("User ID"), 50);
+        public Fields.Text Address { get; } = new("Address", Label("Address"), 50);
 
         public ApplicationLog()
         {
@@ -39,6 +40,7 @@
             LogType.Value = type;
             Message.Value = message;
             UserID.Value = CurrentSession.UserId;
+            Address.Value = CurrentSession.Address;
             Insert();
         }
     }

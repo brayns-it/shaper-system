@@ -34,68 +34,16 @@
         [PublicAccess]
         public AccessTokenResponse LoginByID(string userid, string password)
         {
-            var user = new User();
-            user.ID.SetRange(userid);
-            user.Password.SetRange(user.HashPassword(password));
-            user.Enabled.SetRange(true);
-
-            if (!user.FindFirst())
-            {
-                user.Password.SetRange("plain:" + password);
-                if (!user.FindFirst())
-                {
-                    using (ApplicationLog log = new())
-                    {
-                        log.Connect();
-                        log.Add(ApplicationLogType.SECURITY, Label("User ID {0} failed login", userid));
-                    }
-
-                    throw new Error(Label("Invalid ID or password"));
-                }
-                else
-                {
-                    user.Password.Validate(password);
-                    user.Modify();
-                }
-            }
-
+            var authMgmt = new AuthenticationManagement();
+            var user = authMgmt.GetUserById(userid, password);
             return AuthenticateUser(user);
         }
 
         [PublicAccess]
         public AccessTokenResponse LoginByEmail(string email, string password)
         {
-            email = email.Trim();
-            if (email.Length == 0)
-                throw new Error(Label("Invalid e-mail"));
-
-            var user = new User();
-            user.EMail.SetRange(email);
-            user.Enabled.SetRange(true);
-            if (user.Count() > 1)
-                throw new Error(Label("Ambiguous e-mail '{0}'", email));
-            user.Password.SetRange(user.HashPassword(password));
-
-            if (!user.FindFirst())
-            {
-                user.Password.SetRange("plain:" + password);
-                if (!user.FindFirst())
-                {
-                    using (ApplicationLog log = new())
-                    {
-                        log.Connect();
-                        log.Add(ApplicationLogType.SECURITY, Label("User e-mail {0} failed login", email));
-                    }
-
-                    throw new Error(Label("Invalid e-mail or password"));
-                }
-                else
-                {
-                    user.Password.Validate(password);
-                    user.Modify();
-                }
-            }
-
+            var authMgmt = new AuthenticationManagement();
+            var user = authMgmt.GetUserByEmail(email, password);
             return AuthenticateUser(user);
         }
 

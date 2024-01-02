@@ -17,6 +17,7 @@
                     new Controls.Field(general, "email", Rec.EMail);
                     new Controls.Field(general, "password", Rec.Password) { InputType = Shaper.Controls.InputType.Password };
                     new Controls.Field(general, "type", Rec.Type);
+                    new Controls.Field(general, "authProvider", Rec.AuthenticationProvider);
                     new Controls.Field(general, "lastlogin", Rec.LastLogin) { ReadOnly = true };
                     new Controls.Field(general, "enabled", Rec.Enabled);
                     new Controls.Field(general, "superuser", Rec.Superuser);
