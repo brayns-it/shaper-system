@@ -163,8 +163,12 @@ msgctxt "Brayns.System.AuthenticationProviderList"
 msgid "Authentication providers"
 msgstr ""
 
-msgctxt "Brayns.System.AccessTokenResponse"
+msgctxt "Brayns.System.ClientManagement"
 msgid "User logged in"
+msgstr ""
+
+msgctxt "Brayns.System.DeviceList"
+msgid "Devices"
 msgstr ""
 
 msgctxt "Brayns.System.Information"
@@ -401,6 +405,10 @@ msgstr ""
 
 msgctxt "Brayns.System.Start"
 msgid "Authentication"
+msgstr ""
+
+msgctxt "Brayns.System.Start"
+msgid "Devices"
 msgstr ""
 
 msgctxt "Brayns.System.Start"

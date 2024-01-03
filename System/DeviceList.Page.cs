@@ -1,10 +1,10 @@
 ﻿namespace Brayns.System
 {
-    public class UserList : Page<UserList, User>
+    public class DeviceList : Page<DeviceList, User>
     {
-        public UserList()
+        public DeviceList()
         {
-            UnitCaption = Label("Users");
+            UnitCaption = Label("Devices");
             Card = typeof(UserCard);
 
             var area = Controls.ContentArea.Create(this);
@@ -19,13 +19,13 @@
                 }
             }
 
-            Loading += UserList_Loading;
+            Loading += DeviceList_Loading;
         }
 
-        private void UserList_Loading()
+        private void DeviceList_Loading()
         {
             Rec.TableFilterLevel = Shaper.Fields.FilterLevel.Private;
-            Rec.Type.SetRange(UserTypes.USER);
+            Rec.Type.SetRange(UserTypes.DEVICE);
         }
     }
 }

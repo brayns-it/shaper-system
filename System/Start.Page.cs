@@ -36,6 +36,11 @@
 
                         var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
                         {
+                            new Controls.Action(actAuth, Label("Devices"), Icon.FromName("fas fa-laptop"))
+                            {
+                                Run = typeof(DeviceList)
+                            };
+
                             new Controls.Action(actAuth, Label("Roles"), Icon.FromName("fas fa-user-tag"))
                             {
                                 Run = typeof(RoleList)

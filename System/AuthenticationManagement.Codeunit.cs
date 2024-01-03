@@ -100,7 +100,7 @@ namespace Brayns.System
                 throw new Error(Label("Invalid e-mail"));
 
             var user = new User();
-            user.ID.SetRange(email);
+            user.EMail.SetRange(email);
             user.Enabled.SetRange(true);
             if (user.Count() > 1)
                 throw new Error(Label("Ambiguous e-mail '{0}'", email));

@@ -1,5 +1,12 @@
 ﻿namespace Brayns.System
 {
+    public class AccessTokenResponse
+    {
+        public string? access_token;
+        public string? token_type;
+        public int? expires_in;
+    }
+
     [Published]
     public class ClientManagement : Codeunit
     {
@@ -24,14 +31,6 @@
             }
         }
 
-        public class AccessTokenResponse
-        {
-            public string? access_token;
-            public string? token_type;
-            public int? expires_in;
-        }
-
-        [PublicAccess]
         public AccessTokenResponse LoginByID(string userid, string password)
         {
             var authMgmt = new AuthenticationManagement();
@@ -39,7 +38,6 @@
             return AuthenticateUser(user);
         }
 
-        [PublicAccess]
         public AccessTokenResponse LoginByEmail(string email, string password)
         {
             var authMgmt = new AuthenticationManagement();
