@@ -4,7 +4,7 @@
     {
         protected Fields.Text Token { get; init; } = new Fields.Text(Label("Token"));
 
-        public UserCard()
+        protected override void Initialize()
         {
             UnitCaption = Label("User");
 
@@ -33,8 +33,6 @@
                     Filter = (tgt) => tgt.UserID.SetRange(Rec.ID.Value)
                 };
             }
-
-            Extend();
         }
     }
 }

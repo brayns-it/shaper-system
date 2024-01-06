@@ -2,7 +2,7 @@
 {
     public partial class Start : Page<Start>
     {
-        public Start()
+        protected override void Initialize()
         {
             UnitCaption = Label("Start");
             PageType = PageTypes.Start;
@@ -91,8 +91,10 @@
             Controls.Footer.Create(this);
 
             Loading += Start_Loading;
-            Extend();
+        }
 
+        protected override void AfterExtend()
+        {
             Control("group-admin")!.MoveLast();
         }
 

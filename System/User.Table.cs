@@ -31,8 +31,6 @@
             AddRelation<AuthenticationProvider>(AuthenticationProvider);
 
             Password.Validating += Password_Validating;
-
-            Extend();
         }
 
         private void Password_Validating()

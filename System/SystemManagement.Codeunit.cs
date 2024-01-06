@@ -26,13 +26,13 @@
             }
         }
 
-        private static void Session_Starting()
+        private static void Session_Starting(bool sessionIsNew)
         {
             if (CurrentSession.Database == null) return;
 
             Session session = new() { TableLock = true };
 
-            if (!CurrentSession.IsNew)
+            if (!sessionIsNew)
             {
                 if (session.Get(CurrentSession.Id))
                 {

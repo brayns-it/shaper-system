@@ -5,7 +5,7 @@
         public Fields.Code UserID { get; } = new("User ID", Label("User ID"), 50);
         public Fields.Code RoleCode { get; } = new("Role code", Label("Role code"), 10);
 
-        public UserRole()
+        protected override void Initialize()
         {
             TableName = "User role";
             UnitCaption = Label("User role");

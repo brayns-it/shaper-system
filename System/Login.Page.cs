@@ -8,7 +8,7 @@
         protected Fields.Text Password { get; } = new(Label("Password"));
         protected Fields.Boolean Remember { get; } = new(Label("Remember"));
 
-        public Login()
+        protected override void Initialize()
         {
             UnitCaption = Label("Login");
             PageType = PageTypes.Login;
@@ -34,9 +34,10 @@
             }
 
             Loading += Login_Loading;
+        }
 
-            Extend();
-
+        protected override void AfterExtend()
+        {
             if (LoginByID)
                 Control("email")!.Detach();
             else
