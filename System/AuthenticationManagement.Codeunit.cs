@@ -32,11 +32,9 @@ namespace Brayns.System
 
         public Error ErrorInvalidCredentials(string userid)
         {
-            using (ApplicationLog log = new())
-            {
-                log.Connect();
-                log.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", userid));
-            }
+            ApplicationLog log = new();
+            log.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", userid));
+            Commit();
 
             return new Error(Label("Invalid user or password"));
         }

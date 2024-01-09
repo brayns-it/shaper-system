@@ -66,11 +66,10 @@
                         invalid = false;
 
                         if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
-                            using (ApplicationLog log = new())
-                            {
-                                log.Connect();
-                                log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
-                            }
+                        {
+                            ApplicationLog log = new();
+                            log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
+                        }
                     }
                 }
 

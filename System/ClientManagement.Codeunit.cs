@@ -99,11 +99,8 @@
             CurrentSession.UserId = user.ID.Value;
             CurrentSession.IsSuperuser = user.Superuser.Value;
 
-            using (ApplicationLog log = new())
-            {
-                log.Connect();
-                log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
-            }
+            ApplicationLog log = new();
+            log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
 
             return new()
             {
