@@ -1,6 +1,6 @@
 ﻿namespace Brayns.System
 {
-    public class AuthenticationProviderType
+    public class AuthenticationProviderType : OptList
     {
         public const int NONE = 0;
 

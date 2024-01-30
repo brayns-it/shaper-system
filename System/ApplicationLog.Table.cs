@@ -1,6 +1,6 @@
 ﻿namespace Brayns.System
 {
-    public class ApplicationLogType
+    public class ApplicationLogType : OptList
     {
         [Label("Information")]
         public const int INFORMATION = 0;

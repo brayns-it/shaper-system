@@ -1,6 +1,6 @@
 ﻿namespace Brayns.System
 {
-    public class RolePermission
+    public class RolePermission : OptList
     {
         public const int NONE = 0;
 

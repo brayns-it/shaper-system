@@ -1,6 +1,6 @@
 ﻿namespace Brayns.System
 {
-    public class UserTypes 
+    public class UserTypes : OptList
     {
         [Label("User")]
         public const int USER = 0;
