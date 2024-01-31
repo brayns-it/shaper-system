@@ -6,9 +6,15 @@
         {
             Shaper.Application.Initializing += Application_Initializing;
             Shaper.Application.SessionCleaning += Application_SessionCleaning;
+            Shaper.Application.Monitoring += Application_Monitoring;
             Shaper.Session.Starting += Session_Starting;
             Shaper.Session.Stopping += Session_Stopping;
             Shaper.Session.Destroying += Session_Destroying;
+        }
+
+        private static void Application_Monitoring()
+        {
+            SchedTaskMgmt.RunNext();
         }
 
         private static void Application_SessionCleaning(List<Guid> sessionsIds)

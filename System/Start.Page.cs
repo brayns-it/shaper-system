@@ -32,6 +32,11 @@
                             {
                                 Run = typeof(InformationCard)
                             };
+
+                            new Controls.Action(actGeneral, Label("Scheduled tasks"), Icon.FromName("fas fa-clock"))
+                            {
+                                Run = typeof(ScheduledTaskList)
+                            };
                         }
 
                         var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
