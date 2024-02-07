@@ -1,6 +1,5 @@
 ﻿namespace Brayns.System
 {
-    [Shaper.Classes.AppModule]
     public class App : Shaper.Classes.AppModule
     {
         private Upgrades upgrades = new();

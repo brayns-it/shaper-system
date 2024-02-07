@@ -12,25 +12,6 @@
     {
         public bool RememberToken { get; set; }
 
-        static ClientManagement()
-        {
-            Brayns.Shaper.Systems.ClientManagement.ClientInitializing += ClientManagement_Initializing;
-        }
-
-        private static void ClientManagement_Initializing(Shaper.Systems.ClientManagement sender)
-        {
-            if (CurrentSession.UserId.Length == 0)
-            {
-                var login = new Login();
-                login.Run();
-            }
-            else
-            {
-                var start = new Start();
-                start.Run();
-            }
-        }
-
         public AccessTokenResponse LoginByID(string userid, string password)
         {
             var authMgmt = new AuthenticationManagement();
@@ -67,7 +48,7 @@
             CurrentSession.IsSuperuser = false;
         }
 
-        private AccessTokenResponse AuthenticateUser(User user)
+        public AccessTokenResponse AuthenticateUser(User user)
         {
             var session = new Session();
             if (!session.Get(CurrentSession.Id))

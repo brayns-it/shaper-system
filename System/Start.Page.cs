@@ -6,7 +6,7 @@
         {
             UnitCaption = Label("Start");
             PageType = PageTypes.Start;
-
+            
             var appCenter = Controls.AppCenter.Create(this);
             {
                 Controls.Indicator.Create(appCenter);
