@@ -12,17 +12,10 @@
     {
         public bool RememberToken { get; set; }
 
-        public AccessTokenResponse LoginByID(string userid, string password)
+        public AccessTokenResponse Login(string idOrEmail, string password)
         {
             var authMgmt = new AuthenticationManagement();
-            var user = authMgmt.GetUserById(userid, password);
-            return AuthenticateUser(user);
-        }
-
-        public AccessTokenResponse LoginByEmail(string email, string password)
-        {
-            var authMgmt = new AuthenticationManagement();
-            var user = authMgmt.GetUserByEmail(email, password);
+            var user = authMgmt.GetUser(idOrEmail, password);
             return AuthenticateUser(user);
         }
 
