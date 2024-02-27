@@ -72,7 +72,7 @@
                             };
                         }
 
-                        var actSystem = new Controls.Action(grpAdmin, Label("System"), Icon.FromName("fas fa-microchip"));
+                        var actSystem = new Controls.Action(grpAdmin, "admin-system", Label("System"), Icon.FromName("fas fa-microchip"));
                         {
                             new Controls.Action(actSystem, Label("Administration"), Icon.FromName("fas fa-tools"))
                             {

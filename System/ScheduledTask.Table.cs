@@ -13,13 +13,21 @@
 
         [Label("Error")]
         public const int ERROR = 3;
+
+        [Label("Stopping")]
+        public const int STOPPING = 4;
+
+        [Label("Starting")]
+        public const int STARTING = 5;
     }
 
     public class ScheduledTask : Table<ScheduledTask>
     {
         public Fields.Integer EntryNo { get; } = new("Entry no.", Label("Entry no.")) { AutoIncrement = true };
+        public Fields.Code ReferenceCode { get; } = new("Reference code", Label("Reference code"), 20);
         public Fields.Text Description { get; } = new("Description", Label("Description"), 100);
         public Fields.Option<ScheduledTaskStatus> Status { get; } = new("Status", Label("Status"));
+        public Fields.Boolean RunAlways { get; } = new("Run always", Label("Run always"));
         public Fields.Boolean RunOnMonday { get; } = new("Run on monday", Label("Run on monday"));
         public Fields.Boolean RunOnTuesday { get; } = new("Run on tuesday", Label("Run on tuesday"));
         public Fields.Boolean RunOnWednesday { get; } = new("Run on wednesday", Label("Run on wednesday"));
@@ -34,23 +42,72 @@
         public Fields.Text MethodName { get; } = new("Method name", Label("Method name"), 250);
         public Fields.Text Parameter { get; } = new("Parameter", Label("Parameter"), 250);
         public Fields.DateTime NextRunTime { get; } = new("Next run time", Label("Next run time"));
+        public Fields.Guid RunningSessionID { get; } = new("Running session ID", Label("Running session ID"));
+        public Fields.Text RunningEnvironment { get; } = new("Running environment", Label("Running environment"), 100);
+        public Fields.Text RunningServer { get; } = new("Running server", Label("Running server"), 100);
 
         public ScheduledTask()
         {
             TableName = "Scheduled task";
             UnitCaption = Label("Scheduled task");
             TablePrimaryKey.Add(EntryNo);
+
+            AddRelation<Session>(RunningSessionID);
+
+            Deleting += ScheduledTask_Deleting;
+        }
+
+        private void ScheduledTask_Deleting()
+        {
+            switch (Status.Value)
+            {
+                case ScheduledTaskStatus.STARTING:
+                case ScheduledTaskStatus.RUNNING:
+                case ScheduledTaskStatus.STOPPING:
+                    throw new Error(Label("Wait until %1 has been stopped", Description.Value));
+            }
         }
 
         public void SetDisabled()
         {
-            Status.Value = ScheduledTaskStatus.DISABLED;
-            Modify();
+            switch (Status.Value)
+            {
+                case ScheduledTaskStatus.ENABLED:
+                case ScheduledTaskStatus.ERROR:
+                    Status.Value = ScheduledTaskStatus.DISABLED;
+                    Modify();
+                    break;
+
+                case ScheduledTaskStatus.STARTING:
+                case ScheduledTaskStatus.RUNNING:
+                    Status.Value = ScheduledTaskStatus.STOPPING;
+                    Modify();
+                    break;
+            }
         }
 
         public void SetEnabled()
         {
+            if (Status.Value == ScheduledTaskStatus.STOPPING)
+                throw new Error(Label("Wait until %1 has been stopped", Description.Value));
+
+            if (Status.Value == ScheduledTaskStatus.STARTING)
+                throw new Error(Label("Wait until %1 has been started", Description.Value));
+
             IntervalSec.Test();
+
+            if (RunAlways.Value)
+            {
+                var dt2 = DateTime.Now;
+                if (dt2 < NextRunTime.Value.AddSeconds(IntervalSec.Value))
+                    dt2 = dt2.AddSeconds(IntervalSec.Value);
+
+                NextRunTime.Value = dt2;
+                Status.Value = ScheduledTaskStatus.ENABLED;
+                Modify();
+
+                return;
+            }
 
             DateTime dt = DateTime.Today;
             DateTime max = dt.AddDays(8);
@@ -73,6 +130,9 @@
                 dt += StartingTime.Value.TimeOfDay;
 
                 while (dt <= DateTime.Now)
+                    dt = dt.AddSeconds(IntervalSec.Value);
+
+                if (dt < NextRunTime.Value.AddSeconds(IntervalSec.Value))
                     dt = dt.AddSeconds(IntervalSec.Value);
 
                 if (dt.TimeOfDay > EndingTime.Value.TimeOfDay)

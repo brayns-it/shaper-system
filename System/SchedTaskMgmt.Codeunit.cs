@@ -2,6 +2,22 @@
 {
     public class SchedTaskMgmt : Codeunit
     {
+        private static object _lockTasks = new();
+        private static Dictionary<int, RunningTask> Tasks = new();
+
+        public static void ApplicationInitialize()
+        {
+            ScheduledTask schedTask = new();
+            schedTask.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
+            schedTask.RunningServer.SetRange(CurrentSession.Server);
+
+            schedTask.Status.SetFilter("{0}|{1}", ScheduledTaskStatus.RUNNING, ScheduledTaskStatus.STARTING);
+            schedTask.Status.ModifyAll(ScheduledTaskStatus.ERROR);
+
+            schedTask.Status.SetRange(ScheduledTaskStatus.STOPPING);
+            schedTask.Status.ModifyAll(ScheduledTaskStatus.DISABLED);
+        }
+
         public static void RunNext()
         {
             var task = new ScheduledTask();
@@ -10,64 +26,114 @@
             task.Status.SetRange(ScheduledTaskStatus.ENABLED);
             if (task.FindFirst())
             {
-                task.Status.Value = ScheduledTaskStatus.RUNNING;
+                task.Status.Value = ScheduledTaskStatus.STARTING;
+                task.RunningServer.Value = CurrentSession.Server;
+                task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
                 task.Modify();
                 Commit();
 
-                new Thread(new ParameterizedThreadStart(RunTask)).Start(task.EntryNo.Value);
+                RunningTask rt = new();
+                rt.Tag = task.EntryNo.Value;
+                rt.TypeName = task.ObjectName.Value;
+                rt.MethodName = task.MethodName.Value;
+                rt.Parameters = task.Parameter.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                rt.Starting += Task_Starting;
+                rt.Error += Task_Error;
+                rt.Finishing += Task_Finishing;
+
+                lock (_lockTasks)
+                    Tasks.Add(task.EntryNo.Value, rt);
+
+                rt.Start();
+            }
+
+            // stop request
+            task.Reset();
+            task.Status.SetRange(ScheduledTaskStatus.STOPPING);
+            task.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
+            task.RunningServer.SetRange(CurrentSession.Server);
+            if (task.FindSet())
+                while (task.Read())
+                {
+                    lock (_lockTasks)
+                    {
+                        if (Tasks.ContainsKey(task.EntryNo.Value))
+                            Tasks[task.EntryNo.Value].Stop();
+                        else
+                        {
+                            ClearTask(task);
+                            task.Status.Value = ScheduledTaskStatus.DISABLED;
+                            task.Modify();
+                        }
+                    }
+                }
+        }
+
+        private static void RemoveFromList(ScheduledTask task)
+        {
+            lock (_lockTasks)
+            {
+                if (Tasks.ContainsKey(task.EntryNo.Value))
+                    Tasks.Remove(task.EntryNo.Value);
             }
         }
 
-        private static void RunTask(object? o)
+        private static void ClearTask(ScheduledTask task)
         {
-            ScheduledTask task;
-            try
-            {
-                CurrentSession.Start(new Shaper.SessionArgs()
-                {
-                    Id = Guid.NewGuid(),
-                    Type = Shaper.SessionTypes.BATCH
-                });
-                CurrentSession.IsSuperuser = true;
+            task.RunningServer.Value = "";
+            task.RunningEnvironment.Value = "";
+            task.RunningSessionID.Value = Guid.Empty;
+        }
 
-                task = new();
-                task.Get((int)o!);
-            }
-            catch
-            {
-                CurrentSession.Stop(true);
-                return;
-            }
+        private static void Task_Finishing(RunningTask sender)
+        {
+            ScheduledTask task = new();
+            task.Get((int)sender.Tag!);
 
-            try
-            {
-                task.ObjectName.Test();
-                task.MethodName.Test();
+            ClearTask(task);
 
-                var prx = Shaper.Loader.Proxy.CreateFromName(task.ObjectName.Value);
-                prx.Invoke(task.MethodName.Value, new object[] { task.Parameter.Value });
+            bool disable = false;
+            if (task.Status.Value == ScheduledTaskStatus.STOPPING)
+                disable = true;
+            if ((sender.Batch != null) && sender.Batch.StopRequest)
+                disable = true;
 
-                task.Refresh();
+            if (disable)
+                task.Status.Value = ScheduledTaskStatus.DISABLED;
+            else
                 task.SetEnabled();
-            }
-            catch (Exception ex)
-            {
-                Rollback();
 
-                while (ex.InnerException != null)
-                    ex = ex.InnerException;
+            task.Modify();
 
-                var log = new ApplicationLog();
-                log.Add(ApplicationLogType.ERROR, Label("Task {0} error {1}", task.Description.Value, ex.Message));
-                Commit();
+            RemoveFromList(task);
+        }
 
-                task.Refresh();
-                task.Status.Value = ScheduledTaskStatus.ERROR;
-                task.Modify();
-            }
+        private static void Task_Error(RunningTask sender, Exception ex)
+        {
+            while (ex.InnerException != null)
+                ex = ex.InnerException;
 
-            Commit();
-            CurrentSession.Stop(true);
+            ScheduledTask task = new();
+            task.Get((int)sender.Tag!);
+
+            ClearTask(task);
+
+            task.Status.Value = ScheduledTaskStatus.ERROR;
+            task.Modify();
+
+            var log = new ApplicationLog();
+            log.Add(ApplicationLogType.ERROR, Label("Task {0} error {1}", task.Description.Value, ex.Message));
+
+            RemoveFromList(task);
+        }
+
+        private static void Task_Starting(RunningTask sender)
+        {
+            ScheduledTask task = new();
+            task.Get((int)sender.Tag!);
+            task.RunningSessionID.Value = CurrentSession.Id;
+            task.Status.Value = ScheduledTaskStatus.RUNNING;
+            task.Modify();
         }
     }
 }

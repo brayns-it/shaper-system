@@ -187,6 +187,8 @@
             session.Server.SetRange(CurrentSession.Server);
             session.DeleteAll();
 
+            SchedTaskMgmt.ApplicationInitialize();
+
             CleanupAuthentication();
         }
 

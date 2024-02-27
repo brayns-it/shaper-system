@@ -18,6 +18,25 @@
                     new Controls.Field(grid, Rec.Status);
                 }
             }
+
+            var actions = Controls.ActionArea.Create(this);
+            {
+                var enable = new Controls.Action(actions, Label("Enable"), Icon.FromName("fas fa-check"));
+                enable.Triggering += () =>
+                {
+                    Rec.Refresh();
+                    Rec.SetEnabled();
+                    Update();
+                };
+
+                var disable = new Controls.Action(actions, Label("Disable"), Icon.FromName("fas fa-ban"));
+                disable.Triggering += () =>
+                {
+                    Rec.Refresh();
+                    Rec.SetDisabled();
+                    Update();
+                };
+            }
         }
     }
 }
