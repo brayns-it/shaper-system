@@ -18,7 +18,7 @@
                 var form = new Controls.Group(content);
                 {
                     form.Primary = true;
-                    form.LabelOrientation = Controls.LabelOrientation.Vertical;
+                    form.LabelStyle = Controls.LabelStyle.Vertical;
                     form.FieldPerRow = Controls.FieldPerRow.One;
                     form.Collapsible = false;
 

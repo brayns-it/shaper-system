@@ -44,12 +44,16 @@
 
         public void SetDisabled()
         {
+            Refresh();
             Status.Value = ScheduledTaskStatus.DISABLED;
             Modify();
         }
 
         public void SetEnabled()
         {
+            if (Status.Value == ScheduledTaskStatus.RUNNING)
+                throw new Error(Label("Task is running"));
+
             IntervalSec.Test();
 
             DateTime dt = DateTime.Today;

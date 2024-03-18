@@ -48,6 +48,7 @@
                 prx.Invoke(task.MethodName.Value, new object[] { task.Parameter.Value });
 
                 task.Refresh();
+                task.Status.Value = ScheduledTaskStatus.DISABLED;
                 task.SetEnabled();
             }
             catch (Exception ex)
