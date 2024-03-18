@@ -2,9 +2,7 @@
 {
     public partial class Login : Page<Login>
     {
-        protected bool LoginByID { get; set; } = false;
-        protected Fields.Text ID { get; } = new(Label("ID"));
-        protected Fields.Text EMail { get; } = new(Label("E-Mail"));
+        protected Fields.Text ID { get; } = new(Label("ID or E-Mail"));
         protected Fields.Text Password { get; } = new(Label("Password"));
         protected Fields.Boolean Remember { get; } = new(Label("Remember"));
 
@@ -22,8 +20,7 @@
                     form.FieldPerRow = Controls.FieldPerRow.One;
                     form.Collapsible = false;
 
-                    new Controls.Field(form, "id", ID);
-                    new Controls.Field(form, "email", EMail);
+                    new Controls.Field(form, ID);
                     new Controls.Field(form, Password) { InputType = Controls.InputType.Password };
                     new Controls.Field(form, Remember);
 
@@ -34,14 +31,6 @@
             }
 
             Loading += Login_Loading;
-        }
-
-        protected override void AfterExtend()
-        {
-            if (LoginByID)
-                Control("email")!.Detach();
-            else
-                Control("id")!.Detach();
         }
 
         private void Login_Loading()
@@ -56,12 +45,7 @@
         {
             var clMgmt = new ClientManagement();
             clMgmt.RememberToken = Remember.Value;
-
-            if (LoginByID)
-                clMgmt.LoginByID(ID.Value, Password.Value);
-            else
-                clMgmt.LoginByEmail(EMail.Value, Password.Value);
-
+            clMgmt.Login(ID.Value, Password.Value);
             Client.Reload();
         }
     }

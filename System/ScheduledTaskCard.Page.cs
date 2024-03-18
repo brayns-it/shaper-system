@@ -16,13 +16,19 @@
                     new Controls.Field(general, Rec.Parameter);
                     new Controls.Field(general, Rec.Status) { ReadOnly = true };
                     new Controls.Field(general, Rec.NextRunTime);
+                    new Controls.Field(general, Rec.ReferenceCode);
+                    new Controls.Field(general, Rec.IntervalSec);
+
+                    var runAlways = new Controls.Field(general, Rec.RunAlways);
+                    runAlways.Validating += () => ToggleScheduleVisible();
                 }
 
                 var schedule = new Controls.Group(content, "schedule", Label("Schedule"));
                 {
+                    schedule.Visible = false;
+
                     new Controls.Field(schedule, Rec.StartingTime);
                     new Controls.Field(schedule, Rec.EndingTime);
-                    new Controls.Field(schedule, Rec.IntervalSec);
                     new Controls.Field(schedule, Rec.RunOnMonday);
                     new Controls.Field(schedule, Rec.RunOnTuesday);
                     new Controls.Field(schedule, Rec.RunOnWednesday);
@@ -38,6 +44,7 @@
                 var enable = new Controls.Action(actions, Label("Enable"), Icon.FromName("fas fa-check"));
                 enable.Triggering += () =>
                 {
+                    Rec.Refresh();
                     Rec.SetEnabled();
                     Update();
                 };
@@ -45,10 +52,19 @@
                 var disable = new Controls.Action(actions, Label("Disable"), Icon.FromName("fas fa-ban"));
                 disable.Triggering += () =>
                 {
+                    Rec.Refresh();
                     Rec.SetDisabled();
                     Update();
                 };
             }
+
+            DataReading += () => ToggleScheduleVisible();
+        }
+
+        void ToggleScheduleVisible()
+        {
+            Control("schedule")!.Visible = !Rec.RunAlways.Value;
+            Control<Controls.ContentArea>()!.Redraw();
         }
     }
 }

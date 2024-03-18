@@ -75,35 +75,26 @@ namespace Brayns.System
             }
         }
 
-        public User GetUserById(string userid, string password)
+        public User GetUser(string idOrEmail, string password)
         {
-            userid = userid.Trim();
-            if (userid.Length == 0)
-                throw new Error(Label("Invalid ID"));
+            idOrEmail = idOrEmail.Trim();
+            if (idOrEmail.Length == 0)
+                throw new Error(Label("Invalid user ID"));
 
             var user = new User();
-            user.ID.SetRange(userid);
             user.Enabled.SetRange(true);
+
+            if (idOrEmail.Contains("@"))
+            {
+                user.EMail.SetRange(idOrEmail);
+                if (user.Count() > 1)
+                    throw new Error(Label("Ambiguous e-mail '{0}'", idOrEmail));
+            }
+            else
+                user.ID.SetRange(idOrEmail);
+
             if (!user.FindFirst())
-                throw ErrorInvalidCredentials(userid);
-
-            TestUserPassword(user, password);
-            return user;
-        }
-
-        public User GetUserByEmail(string email, string password)
-        {
-            email = email.Trim();
-            if (email.Length == 0)
-                throw new Error(Label("Invalid e-mail"));
-
-            var user = new User();
-            user.EMail.SetRange(email);
-            user.Enabled.SetRange(true);
-            if (user.Count() > 1)
-                throw new Error(Label("Ambiguous e-mail '{0}'", email));
-            if (!user.FindFirst())
-                throw ErrorInvalidCredentials(email);
+                throw ErrorInvalidCredentials(idOrEmail);
 
             TestUserPassword(user, password);
             return user;

@@ -10,6 +10,20 @@
             Shaper.Session.Starting += Session_Starting;
             Shaper.Session.Stopping += Session_Stopping;
             Shaper.Session.Destroying += Session_Destroying;
+            Shaper.Systems.ClientManagement.RunningLogin += ClientManagement_RunningLogin;
+            Shaper.Systems.ClientManagement.RunningStart += ClientManagement_RunningStart;
+        }
+
+        private static void ClientManagement_RunningStart(Shaper.Systems.ClientManagement sender)
+        {
+            var start = new Start();
+            start.Run();
+        }
+
+        private static void ClientManagement_RunningLogin(Shaper.Systems.ClientManagement sender)
+        {
+            var login = new Login();
+            login.Run();
         }
 
         private static void Application_Monitoring()
@@ -172,6 +186,8 @@
             session.Environment.SetRange(Shaper.Application.GetEnvironmentName());
             session.Server.SetRange(CurrentSession.Server);
             session.DeleteAll();
+
+            SchedTaskMgmt.ApplicationInitialize();
 
             CleanupAuthentication();
         }
