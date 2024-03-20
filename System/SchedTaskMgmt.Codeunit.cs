@@ -92,17 +92,7 @@
 
             ClearTask(task);
 
-            bool disable = false;
-            if (task.Status.Value == ScheduledTaskStatus.STOPPING)
-                disable = true;
-            if ((sender.Batch != null) && sender.Batch.StopRequest)
-                disable = true;
-
-            if (disable)
-                task.Status.Value = ScheduledTaskStatus.DISABLED;
-            else
-                task.SetEnabled();
-
+            task.SetEnabled();
             task.Modify();
 
             RemoveFromList(task);
