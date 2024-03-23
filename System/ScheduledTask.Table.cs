@@ -64,7 +64,7 @@
                 case ScheduledTaskStatus.STARTING:
                 case ScheduledTaskStatus.RUNNING:
                 case ScheduledTaskStatus.STOPPING:
-                    throw new Error(Label("Wait until %1 has been stopped", Description.Value));
+                    throw new Error(Label("Wait until {0} has been stopped", Description.Value));
             }
         }
 
@@ -89,10 +89,10 @@
         public void SetEnabled()
         {
             if (Status.Value == ScheduledTaskStatus.STOPPING)
-                throw new Error(Label("Wait until %1 has been stopped", Description.Value));
+                throw new Error(Label("Wait until {0} has been stopped", Description.Value));
 
             if (Status.Value == ScheduledTaskStatus.STARTING)
-                throw new Error(Label("Wait until %1 has been started", Description.Value));
+                throw new Error(Label("Wait until {0} has been started", Description.Value));
 
             IntervalSec.Test();
 

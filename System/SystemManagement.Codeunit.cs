@@ -182,6 +182,9 @@
         {
             if (CurrentSession.Database == null) return;
 
+            var log = new ApplicationLog();
+            log.Add(ApplicationLogType.INFORMATION, Label("Environment {0} starting on {1}", Shaper.Application.GetEnvironmentName(), CurrentSession.Server));
+
             Session session = new();
             session.Environment.SetRange(Shaper.Application.GetEnvironmentName());
             session.Server.SetRange(CurrentSession.Server);

@@ -7,19 +7,36 @@
 
         public static void ApplicationInitialize()
         {
+            var log = new ApplicationLog();
+
             ScheduledTask schedTask = new();
             schedTask.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
             schedTask.RunningServer.SetRange(CurrentSession.Server);
+            if (schedTask.FindSet())
+                while (schedTask.Read())
+                {
+                    switch (schedTask.Status.Value)
+                    {
+                        case ScheduledTaskStatus.RUNNING:
+                        case ScheduledTaskStatus.STARTING:
+                            log.Add(ApplicationLogType.WARNING, Label("Task {0} was running, setting in error", schedTask.Description.Value));
 
-            schedTask.Status.SetFilter("{0}|{1}", ScheduledTaskStatus.RUNNING, ScheduledTaskStatus.STARTING);
-            schedTask.Status.ModifyAll(ScheduledTaskStatus.ERROR);
+                            schedTask.Status.Value = ScheduledTaskStatus.ERROR;
+                            schedTask.Modify();
+                            break;
 
-            schedTask.Status.SetRange(ScheduledTaskStatus.STOPPING);
-            schedTask.Status.ModifyAll(ScheduledTaskStatus.DISABLED);
+                        case ScheduledTaskStatus.STOPPING:
+                            schedTask.Status.Value = ScheduledTaskStatus.DISABLED;
+                            schedTask.Modify();
+                            break;
+                    }
+                }
         }
 
         public static void RunNext()
         {
+            var log = new ApplicationLog();
+
             var task = new ScheduledTask();
             task.TableLock = true;
             task.NextRunTime.SetFilter("<={0}", DateTime.Now);
@@ -64,9 +81,33 @@
                             ClearTask(task);
                             task.Status.Value = ScheduledTaskStatus.DISABLED;
                             task.Modify();
+                            Commit();
                         }
                     }
                 }
+
+            // is alive?
+            lock (_lockTasks)
+            {
+                List<int> toDel = new();
+                foreach (var t in Tasks.Keys)
+                {
+                    if (!Tasks[t].IsAlive)
+                    {
+                        task.Get(t);
+                        task.Status.Value = ScheduledTaskStatus.ERROR;
+                        task.Modify();
+
+                        log.Add(ApplicationLogType.WARNING, Label("Task {0} unhandled error", task.Description.Value));
+
+                        Commit();
+
+                        toDel.Add(t);
+                    }
+                }
+                foreach (var t in toDel)
+                    Tasks.Remove(t);
+            }
         }
 
         private static void RemoveFromList(ScheduledTask task)

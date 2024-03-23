@@ -38,7 +38,7 @@
             Init();
             EventDateTime.Value = DateTime.Now;
             LogType.Value = type;
-            Message.Value = message;
+            Message.Value = message.Truncate(Message.Length);
             UserID.Value = CurrentSession.UserId;
             Address.Value = CurrentSession.Address;
             Insert();
