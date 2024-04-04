@@ -1,4 +1,6 @@
-﻿namespace Brayns.System
+﻿using System.Text;
+
+namespace Brayns.System
 {
     public class SchedTaskMgmt : Codeunit
     {
@@ -38,7 +40,6 @@
             var log = new ApplicationLog();
 
             var task = new ScheduledTask();
-            task.TableLock = true;
             task.NextRunTime.SetFilter("<={0}", DateTime.Now);
             task.Status.SetRange(ScheduledTaskStatus.ENABLED);
             if (task.FindFirst())
@@ -141,8 +142,13 @@
 
         private static void Task_Error(RunningTask sender, Exception ex)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(ex.StackTrace ?? "");
             while (ex.InnerException != null)
+            {
                 ex = ex.InnerException;
+                sb.Append(ex.StackTrace ?? "");
+            }
 
             ScheduledTask task = new();
             task.Get((int)sender.Tag!);
@@ -153,7 +159,7 @@
             task.Modify();
 
             var log = new ApplicationLog();
-            log.Add(ApplicationLogType.ERROR, Label("Task {0} error {1}", task.Description.Value, ex.Message));
+            log.Add(ApplicationLogType.ERROR, Label("Task {0} error {1}", task.Description.Value, ex.Message), sb.ToString());
 
             RemoveFromList(task);
         }

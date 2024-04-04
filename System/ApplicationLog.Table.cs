@@ -23,6 +23,7 @@
         public Fields.Text Message { get; } = new("Message", Label("Message"), 200);
         public Fields.Code UserID { get; } = new("User ID", Label("User ID"), 50);
         public Fields.Text Address { get; } = new("Address", Label("Address"), 50);
+        public Fields.Text Details { get; } = new("Details", Label("Details"), Fields.Text.MAX_LENGTH);
 
         public ApplicationLog()
         {
@@ -33,7 +34,7 @@
             AddRelation<User>(UserID);
         }
 
-        public void Add(Opt<ApplicationLogType> type, string message)
+        public void Add(Opt<ApplicationLogType> type, string message, string details = "")
         {
             Init();
             EventDateTime.Value = DateTime.Now;
@@ -41,6 +42,7 @@
             Message.Value = message.Truncate(Message.Length);
             UserID.Value = CurrentSession.UserId;
             Address.Value = CurrentSession.Address;
+            Details.Value = details;
             Insert();
         }
     }
