@@ -2,10 +2,11 @@
 {
     public class SystemManagement : Codeunit
     {
+        private static bool _isInitializated = false;
+
         static SystemManagement()
         {
             Shaper.Application.Initializing += Application_Initializing;
-            Shaper.Application.SessionCleaning += Application_SessionCleaning;
             Shaper.Application.Monitoring += Application_Monitoring;
             Shaper.Session.Starting += Session_Starting;
             Shaper.Session.Stopping += Session_Stopping;
@@ -29,21 +30,6 @@
         private static void Application_Monitoring()
         {
             SchedTaskMgmt.RunNext();
-        }
-
-        private static void Application_SessionCleaning(List<Guid> sessionsIds)
-        {
-            CleanupAuthentication();
-
-            Session session = new() { TableLock = true };
-            foreach (var id in sessionsIds)
-            {
-                if (session.Get(id))
-                {
-                    session.Delete();
-                    Commit();
-                }
-            }
         }
 
         private static void Session_Starting(bool sessionIsNew)
@@ -169,17 +155,18 @@
             }
         }
 
-        private static void Session_Destroying()
+        private static void Session_Destroying(Guid sessionId)
         {
             if (CurrentSession.Database == null) return;
 
             Session session = new() { TableLock = true };
-            if (session.Get(CurrentSession.Id))
+            if (session.Get(sessionId))
                 session.Delete();
         }
 
         private static void Application_Initializing()
         {
+            if (_isInitializated) return;
             if (CurrentSession.Database == null) return;
 
             var log = new ApplicationLog();
@@ -193,6 +180,7 @@
             SchedTaskMgmt.ApplicationInitialize();
 
             CleanupAuthentication();
+            _isInitializated = true;
         }
 
         private static void CleanupAuthentication()
