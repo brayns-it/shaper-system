@@ -30,6 +30,8 @@
         private static void Application_Monitoring()
         {
             SchedTaskMgmt.RunNext();
+
+            CleanupAuthentication();
         }
 
         private static void Session_Starting(bool sessionIsNew)
@@ -53,34 +55,14 @@
                 return;
             }
 
-            if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId != Guid.Empty))
+            bool viaToken = false;
+            if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId.Length > 0))
             {
-                bool invalid = true;
-
-                Authentication authentication = new();
-                authentication.ID.SetRange(CurrentSession.AuthenticationId);
-                if (authentication.FindFirst())
-                {
-                    User user = new();
-                    if (user.Get(authentication.UserID.Value))
-                    {
-                        user.LastLogin.Value = DateTime.Now;
-                        user.Modify();
-
-                        CurrentSession.UserId = user.ID.Value;
-                        CurrentSession.IsSuperuser = user.Superuser.Value;
-                        invalid = false;
-
-                        if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
-                        {
-                            ApplicationLog log = new();
-                            log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
-                        }
-                    }
-                }
-
-                if (invalid)
+                var authMgmt = new AuthenticationManagement();
+                if (!authMgmt.TryAuthenticateToken(CurrentSession.AuthenticationId))
                     Client.ClearAuthenticationToken();
+                else
+                    viaToken = true;
             }
 
             if (!session.Get(CurrentSession.Id))
@@ -101,48 +83,15 @@
             session.LastDateTime.Value = DateTime.Now;
             session.UserID.Value = CurrentSession.UserId;
             session.Active.Value = true;
+            if ((session.Type.Value == Shaper.SessionTypes.WEBCLIENT) && viaToken)
+                session.AccessToken.Value = CurrentSession.AuthenticationId!;
             session.Modify();
 
             var nfo = new Information();
             nfo.Get();
             CurrentSession.ApplicationName = nfo.Name.Value;
-
-            if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
-                LoadPermissions();
         }
-
-        private static void LoadPermissions()
-        {
-            List<Shaper.Loader.Permission> perms = new();
-
-            var userRole = new UserRole();
-            userRole.UserID.SetRange(CurrentSession.UserId);
-            if (userRole.FindSet())
-                while (userRole.Read())
-                {
-                    var roleDet = new RoleDetail();
-                    roleDet.RoleCode.SetRange(userRole.RoleCode.Value);
-                    if (roleDet.FindSet())
-                        while (roleDet.Read())
-                        {
-                            switch (roleDet.Execution.Value)
-                            {
-                                case RolePermission.ALLOWED:
-                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.Allow));
-                                    break;
-                                case RolePermission.ALLOWED_INDIRECT:
-                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.AllowIndirect));
-                                    break;
-                                case RolePermission.DENIED:
-                                    perms.Add(new(roleDet.ObjectType.Value, roleDet.ObjectName.Value, Shaper.Loader.PermissionType.Execute, Shaper.Loader.PermissionMode.Deny));
-                                    break;
-                            }
-                        }
-                }
-
-            Shaper.Loader.Permissions.Set(perms);
-        }
-
+        
         private static void Session_Stopping()
         {
             if (CurrentSession.Database == null) return;

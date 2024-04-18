@@ -1,21 +1,14 @@
 ﻿namespace Brayns.System
 {
-    public class AccessTokenResponse
-    {
-        public string? access_token;
-        public string? token_type;
-        public int? expires_in;
-    }
-
-    [Published]
     public class ClientManagement : Codeunit
     {
+        AuthenticationManagement AuthMgmt = new();
+
         public bool RememberToken { get; set; }
 
         public AccessTokenResponse Login(string idOrEmail, string password)
         {
-            var authMgmt = new AuthenticationManagement();
-            var user = authMgmt.GetUser(idOrEmail, password);
+            var user = AuthMgmt.GetUser(idOrEmail, password);
             return AuthenticateUser(user);
         }
 
@@ -41,47 +34,17 @@
             CurrentSession.IsSuperuser = false;
         }
 
-        public AccessTokenResponse AuthenticateUser(User user)
+        private AccessTokenResponse AuthenticateUser(User user)
         {
-            var session = new Session();
-            if (!session.Get(CurrentSession.Id))
-                throw session.ErrorNotFound();
+            AccessTokenResponse result = AuthMgmt.AuthenticateUser(
+                user,
+                AccessTokenFormat.Guid,
+                RememberToken ? (30 * 86400) : 0);
 
-            user.LastLogin.Value = DateTime.Now;
-            user.Modify();
+            DateTimeOffset? exp = (result.expires_in > 0) ? DateTimeOffset.Now.AddSeconds(result.expires_in) : null;
+            Client.SetAuthenticationToken(result.access_token, exp);
 
-            session.UserID.Value = user.ID.Value;
-            session.Modify();
-
-            Authentication auth = new();
-            auth.ID.Value = Guid.NewGuid();
-            auth.CreationDateTime.Value = DateTime.Now;
-            if (RememberToken)
-                auth.ExpireDateTime.Value = DateTime.Now.AddDays(30);
-            else
-                auth.ExpireDateTime.Value = DateTime.Now.AddDays(1);
-            auth.UserID.Value = user.ID.Value;
-            auth.Insert();
-
-            DateTimeOffset? exp = null;
-            if (RememberToken)
-                exp = DateTimeOffset.Now.AddDays(30);
-
-            Client.SetAuthenticationToken(auth.ID.Value, exp);
-
-            CurrentSession.AuthenticationId = auth.ID.Value;
-            CurrentSession.UserId = user.ID.Value;
-            CurrentSession.IsSuperuser = user.Superuser.Value;
-
-            ApplicationLog log = new();
-            log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
-
-            return new()
-            {
-                access_token = auth.ID.Value.ToString("n"),
-                token_type = "bearer",
-                expires_in = Convert.ToInt32(auth.ExpireDateTime.Value.Subtract(DateTime.Now).TotalSeconds)
-            };
+            return result;
         }
     }
 }
