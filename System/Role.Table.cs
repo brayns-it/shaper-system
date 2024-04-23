@@ -10,6 +10,7 @@
             TableName = "Role";
             UnitCaption = Label("Role");
             TablePrimaryKey.Add(Code);
+            TableLookup.Set(Code, Description);
 
             Deleting += Role_Deleting;
         }

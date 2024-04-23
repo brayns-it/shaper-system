@@ -21,6 +21,7 @@
             TableName = "Authentication provider";
             UnitCaption = Label("Authentication provider");
             TablePrimaryKey.Add(Code);
+            TableLookup.Set(Code, Description);
         }
     }
 }
