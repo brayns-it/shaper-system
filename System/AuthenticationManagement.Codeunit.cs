@@ -46,10 +46,6 @@ namespace Brayns.System
 
         public Error ErrorInvalidCredentials(string userid)
         {
-            ApplicationLog log = new();
-            log.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", userid));
-            Commit();
-
             return new Error(Label("Invalid user or password"));
         }
 
@@ -91,27 +87,41 @@ namespace Brayns.System
 
         public User GetUser(string idOrEmail, string password)
         {
-            idOrEmail = idOrEmail.Trim();
-            if (idOrEmail.Length == 0)
-                throw new Error(Label("Invalid user ID"));
-
-            var user = new User();
-            user.Enabled.SetRange(true);
-
-            if (idOrEmail.Contains("@"))
+            try
             {
-                user.EMail.SetRange(idOrEmail);
-                if (user.Count() > 1)
-                    throw new Error(Label("Ambiguous e-mail '{0}'", idOrEmail));
+                idOrEmail = idOrEmail.Trim();
+                if (idOrEmail.Length == 0)
+                    throw new Error(Label("Invalid user ID"));
+
+                var user = new User();
+                user.Enabled.SetRange(true);
+
+                if (idOrEmail.Contains("@"))
+                {
+                    user.EMail.SetRange(idOrEmail);
+                    if (user.Count() > 1)
+                        throw new Error(Label("Ambiguous e-mail '{0}'", idOrEmail));
+                }
+                else
+                    user.ID.SetRange(idOrEmail);
+
+                if (!user.FindFirst())
+                    throw ErrorInvalidCredentials(idOrEmail);
+
+                TestUserPassword(user, password);
+                return user;
             }
-            else
-                user.ID.SetRange(idOrEmail);
+            catch
+            {
+                if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
+                {
+                    ApplicationLog log = new();
+                    log.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", idOrEmail));
+                    Commit();
+                }
 
-            if (!user.FindFirst())
-                throw ErrorInvalidCredentials(idOrEmail);
-
-            TestUserPassword(user, password);
-            return user;
+                throw;
+            }
         }
 
         public User? TryGetUser(string idOrEmail, string password)
@@ -133,6 +143,7 @@ namespace Brayns.System
 
             Authentication authentication = new();
             authentication.ID.SetRange(token);
+            authentication.ExpireDateTime.SetFilter(">={0}", DateTime.Now);
             if (authentication.FindFirst())
             {
                 userId = authentication.UserID.Value;
@@ -244,8 +255,11 @@ namespace Brayns.System
             CurrentSession.UserId = user.ID.Value;
             CurrentSession.IsSuperuser = user.Superuser.Value;
 
-            ApplicationLog log = new();
-            log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
+            if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
+            {
+                ApplicationLog log = new();
+                log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
+            }
 
             if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
                 LoadPermissions();
