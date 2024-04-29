@@ -52,6 +52,10 @@ msgid "Address"
 msgstr ""
 
 msgctxt "Brayns.System.ApplicationLog"
+msgid "Details"
+msgstr ""
+
+msgctxt "Brayns.System.ApplicationLog"
 msgid "Application log"
 msgstr ""
 
@@ -80,23 +84,27 @@ msgid "Authentication"
 msgstr ""
 
 msgctxt "Brayns.System.AuthenticationManagement"
-msgid "User {0} failed login"
-msgstr ""
-
-msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Invalid user or password"
 msgstr ""
 
 msgctxt "Brayns.System.AuthenticationManagement"
-msgid "Invalid ID"
-msgstr ""
-
-msgctxt "Brayns.System.AuthenticationManagement"
-msgid "Invalid e-mail"
+msgid "Invalid user ID"
 msgstr ""
 
 msgctxt "Brayns.System.AuthenticationManagement"
 msgid "Ambiguous e-mail '{0}'"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "User {0} failed login"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "User logged in (token)"
+msgstr ""
+
+msgctxt "Brayns.System.AuthenticationManagement"
+msgid "User logged in"
 msgstr ""
 
 msgctxt "Brayns.System.AuthenticationProviderType"
@@ -163,10 +171,6 @@ msgctxt "Brayns.System.AuthenticationProviderList"
 msgid "Authentication providers"
 msgstr ""
 
-msgctxt "Brayns.System.ClientManagement"
-msgid "User logged in"
-msgstr ""
-
 msgctxt "Brayns.System.DeviceList"
 msgid "Devices"
 msgstr ""
@@ -204,11 +208,7 @@ msgid "General"
 msgstr ""
 
 msgctxt "Brayns.System.Login"
-msgid "ID"
-msgstr ""
-
-msgctxt "Brayns.System.Login"
-msgid "E-Mail"
+msgid "ID or E-Mail"
 msgstr ""
 
 msgctxt "Brayns.System.Login"
@@ -323,6 +323,178 @@ msgctxt "Brayns.System.RoleList"
 msgid "Roles"
 msgstr ""
 
+msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Task {0} was running, setting in error"
+msgstr ""
+
+msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Task {0} unhandled error"
+msgstr ""
+
+msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Task {0} error {1}"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Disabled"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Enabled"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Running"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Error"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Stopping"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskStatus"
+msgid "Starting"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Entry no."
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Reference code"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Description"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Status"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run always"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on monday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on tuesday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on wednesday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on thursday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on friday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on saturday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Run on sunday"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Starting time"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Ending time"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Interval (sec)"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Object name"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Method name"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Parameter"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Next run time"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Running session ID"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Running environment"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Running server"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Scheduled task"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Wait until {0} has been stopped"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Wait until {0} has been started"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Unable to calculate next run time"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Scheduled task"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "General"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Schedule"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Enable"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Disable"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Scheduled tasks"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Enable"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Disable"
+msgstr ""
+
 msgctxt "Brayns.System.Session"
 msgid "ID"
 msgstr ""
@@ -372,6 +544,10 @@ msgid "Active"
 msgstr ""
 
 msgctxt "Brayns.System.Session"
+msgid "Access token"
+msgstr ""
+
+msgctxt "Brayns.System.Session"
 msgid "Session"
 msgstr ""
 
@@ -401,6 +577,10 @@ msgstr ""
 
 msgctxt "Brayns.System.Start"
 msgid "Information"
+msgstr ""
+
+msgctxt "Brayns.System.Start"
+msgid "Scheduled tasks"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
@@ -448,7 +628,7 @@ msgid "Logout from {0}?"
 msgstr ""
 
 msgctxt "Brayns.System.SystemManagement"
-msgid "User logged in (token)"
+msgid "Environment {0} starting on {1}"
 msgstr ""
 
 msgctxt "Brayns.System.TokenList"
