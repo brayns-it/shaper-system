@@ -4,7 +4,7 @@
     {
         AuthenticationManagement AuthMgmt = new();
 
-        public bool RememberToken { get; set; }
+        public int TokenDurationSec { get; set; } = 0;
 
         public AccessTokenResponse Login(string idOrEmail, string password)
         {
@@ -39,7 +39,7 @@
             AccessTokenResponse result = AuthMgmt.AuthenticateUser(
                 user,
                 AccessTokenFormat.Guid,
-                RememberToken ? (30 * 86400) : 0);
+                TokenDurationSec);
 
             DateTimeOffset? exp = (result.expires_in > 0) ? DateTimeOffset.Now.AddSeconds(result.expires_in) : null;
             Client.SetAuthenticationToken(result.access_token, exp);

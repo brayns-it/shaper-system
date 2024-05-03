@@ -44,7 +44,8 @@
         private void Login_Triggering()
         {
             var clMgmt = new ClientManagement();
-            clMgmt.RememberToken = Remember.Value;
+            if (Remember.Value)
+                clMgmt.TokenDurationSec = 30 * 86400;
             clMgmt.Login(ID.Value, Password.Value);
             Client.Reload();
         }
