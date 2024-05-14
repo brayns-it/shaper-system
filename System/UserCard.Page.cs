@@ -33,6 +33,28 @@
                     Filter = (tgt) => tgt.UserID.SetRange(Rec.ID.Value)
                 };
             }
+
+            var acts = Controls.ActionArea.Create(this);
+            {
+                var tools = new Controls.Action(acts, Label("Tools"), Icon.FromName("fas fa-gear"));
+                {
+                    var tenYearToken = new Controls.Action(tools, Label("Generate 10-years token"), Icon.FromName("fas fa-ticket-alt"));
+                    tenYearToken.Triggering += TenYearToken_Triggering;
+                }
+            }
+        }
+
+        private void TenYearToken_Triggering()
+        {
+            Confirm.Show(Label("Generate 10-years token for {0}?", Rec.ID.Value), () =>
+            {
+                var authMgmt = new AuthenticationManagement();
+                var auth = authMgmt.CreateAuthenticationToken(Rec, AccessTokenFormat.Sha256, 10 * 365 * 86400);
+                auth.SystemCreated.Value = true;
+                auth.Modify();
+
+                Message.Show(auth.ID.Value);
+            });
         }
     }
 }

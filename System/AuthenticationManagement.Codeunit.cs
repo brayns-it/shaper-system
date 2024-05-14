@@ -215,6 +215,31 @@ namespace Brayns.System
             Shaper.Loader.Permissions.Set(perms);
         }
 
+        public Authentication CreateAuthenticationToken(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0)
+        {
+            Authentication auth = new();
+
+            switch (tokenFormat)
+            {
+                case AccessTokenFormat.Guid:
+                    auth.ID.Value = Guid.NewGuid().ToString("n");
+                    break;
+                case AccessTokenFormat.DoubleGuid:
+                    auth.ID.Value = Guid.NewGuid().ToString("n") + Guid.NewGuid().ToString("n");
+                    break;
+                case AccessTokenFormat.Sha256:
+                    auth.ID.Value = Functions.Hash(Guid.NewGuid().ToString());
+                    break;
+            }
+
+            auth.CreationDateTime.Value = DateTime.Now;
+            auth.ExpireDateTime.Value = DateTime.Now.AddSeconds((expireSeconds > 0) ? expireSeconds : 30);  // allow refresh
+            auth.UserID.Value = user.ID.Value;
+            auth.Insert();
+
+            return auth;
+        }
+
         public AccessTokenResponse AuthenticateUser(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0)
         {
             var session = new Session();
@@ -227,29 +252,12 @@ namespace Brayns.System
             user.LastLogin.Value = DateTime.Now;
             user.Modify();
 
+            var auth = CreateAuthenticationToken(user, tokenFormat, expireSeconds);
+
             AccessTokenResponse token = new();
             token.token_type = "bearer";
             token.expires_in = expireSeconds;
-
-            switch (tokenFormat)
-            {
-                case AccessTokenFormat.Guid:
-                    token.access_token = Guid.NewGuid().ToString("n");
-                    break;
-                case AccessTokenFormat.DoubleGuid:
-                    token.access_token = Guid.NewGuid().ToString("n") + Guid.NewGuid().ToString("n");
-                    break;
-                case AccessTokenFormat.Sha256:
-                    token.access_token = Functions.Hash(Guid.NewGuid().ToString());
-                    break;
-            }
-
-            Authentication auth = new();
-            auth.ID.Value = token.access_token!;
-            auth.CreationDateTime.Value = DateTime.Now;
-            auth.ExpireDateTime.Value = DateTime.Now.AddSeconds((expireSeconds > 0) ? expireSeconds : 30);  // allow refresh
-            auth.UserID.Value = user.ID.Value;
-            auth.Insert();
+            token.access_token = auth.ID.Value;
 
             CurrentSession.AuthenticationId = token.access_token!;
             CurrentSession.UserId = user.ID.Value;

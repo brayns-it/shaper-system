@@ -18,10 +18,22 @@
                     new Controls.Field(grid, Rec.UserID);
                     new Controls.Field(grid, Rec.CreationDateTime);
                     new Controls.Field(grid, Rec.ExpireDateTime);
+                    new Controls.Field(grid, Rec.SystemCreated);
                 }
             }
 
+            var acts = Controls.ActionArea.Create(this);
+            {
+                var actShow = new Controls.Action(acts, Label("View token"), Icon.FromName("fas fa-eye"));
+                actShow.Triggering += ActShow_Triggering;
+            }
+
             DataReading += TokenList_DataReading;
+        }
+
+        private void ActShow_Triggering()
+        {
+            Message.Show(Rec.ID.Value);
         }
 
         private void TokenList_DataReading()
