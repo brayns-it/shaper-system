@@ -40,7 +40,10 @@
 
         public string HashPassword(string pwd)
         {
-            return Functions.Hash(pwd);
+            if (Functions.ArePasswordReversbile())
+                return "crypt:" + Functions.EncryptPassword(pwd);
+            else
+                return Functions.Hash(pwd);
         }
     }
 }
