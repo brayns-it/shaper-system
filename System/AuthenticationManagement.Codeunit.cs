@@ -169,6 +169,9 @@ namespace Brayns.System
             if (!user.Get(userId))
                 return false;
 
+            if (!user.Enabled.Value)
+                return false;
+
             user.LastLogin.Value = DateTime.Now;
             user.Modify();
 
