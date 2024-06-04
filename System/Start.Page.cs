@@ -2,6 +2,9 @@
 {
     public partial class Start : Page<Start>
     {
+        string _lastNotifications = "";
+        Controls.Notifications? _notifications;
+
         protected override void Initialize()
         {
             UnitCaption = Label("Start");
@@ -12,9 +15,7 @@
                 Controls.Indicator.Create(appCenter);
                 Controls.Search.Create(appCenter);
                 
-                var notifications = Controls.Notifications.Create(appCenter);
-                notifications.Getting += Notifications_Getting;
-                notifications.Triggering += Notifications_Triggering;
+                _notifications = Controls.Notifications.Create(appCenter);
 
                 var userCenter = Controls.UserCenter.Create(appCenter);
                 {
@@ -96,6 +97,60 @@
             Controls.Footer.Create(this);
 
             Loading += Start_Loading;
+            UnitPolling += Start_UnitPolling;
+        }
+
+        private void GetNotifications()
+        {
+            var notif = new Notification();
+            notif.UserID.SetRange(CurrentSession.UserId);
+            notif.IsRead.SetRange(false);
+            notif.TableAscending = false;
+
+            var currNotifs = "";
+            List<Controls.NotificationItem> items = new();
+
+            int i = 0;
+            if (notif.FindSet())
+                while ((i < 10) && notif.Read())
+                {
+                    Controls.NotificationItem item = new();
+                    item.Tag = notif.EntryNo.Value;
+                    item.Title = notif.Title.Value;
+                    item.Description = notif.Description.Value;
+                    item.DateTime = notif.CreationDateTime.Value;
+                    item.Triggering += () =>
+                    {
+                        var notif2 = new Notification();
+                        if (notif.Get((int)item.Tag))
+                        {
+                            notif.IsRead.Value = true;
+                            notif.Modify();
+                            Commit();
+                            GetNotifications();
+                        }
+                    };
+                    items.Add(item);
+                    i++;
+
+                    currNotifs += notif.EntryNo.Value.ToString() + ",";
+                }
+
+            // redraw only if necessary
+            if (currNotifs != _lastNotifications)
+            {
+                _notifications!.Clear();
+                foreach (var item in items)
+                    item.Attach(_notifications);
+
+                _notifications.Redraw();
+                _lastNotifications = currNotifs;
+            }
+        }
+
+        private void Start_UnitPolling()
+        {
+            GetNotifications();
         }
 
         protected override void AfterExtend()
@@ -122,37 +177,6 @@
 
             if (ControlExists<Controls.NavigationPane>())
                 Control<Controls.NavigationPane>()!.Caption = user.Name.Value;
-        }
-
-        private void Notifications_Triggering(string notificationID)
-        {
-            var notif = new Notification();
-            if (notif.Get(int.Parse(notificationID)))
-            {
-                notif.IsRead.Value = true;
-                notif.Modify();
-            }
-        }
-
-        private void Notifications_Getting(List<Controls.NotificationItem> items)
-        {
-            var notif = new Notification();
-            notif.UserID.SetRange(CurrentSession.UserId);
-            notif.IsRead.SetRange(false);
-            notif.TableAscending = false;
-
-            int i = 0;
-            if (notif.FindSet())
-                while ((i < 10) && notif.Read())
-                {
-                    Controls.NotificationItem item = new();
-                    item.ID = notif.EntryNo.Value.ToString();
-                    item.Title = notif.Title.Value;
-                    item.Description = notif.Description.Value;
-                    item.DateTime = notif.CreationDateTime.Value;
-                    items.Add(item);
-                    i++;
-                }
         }
 
         private void ActionLogout_Triggering()

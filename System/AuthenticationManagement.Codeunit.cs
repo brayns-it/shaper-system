@@ -141,32 +141,30 @@ namespace Brayns.System
             }
         }
 
-        public bool TryAuthenticateToken(string token)
+        public void RefreshSessionToken(string token)
         {
-            string userId = "";
-            bool logAuth = false;
-
             Authentication authentication = new();
             authentication.ID.SetRange(token);
+            authentication.Session.SetRange(true);
             authentication.ExpireDateTime.SetFilter(">={0}", DateTime.Now);
             if (authentication.FindFirst())
             {
-                userId = authentication.UserID.Value;
-                logAuth = true;
+                authentication.ExpireDateTime.Value = DateTime.Now.AddSeconds(authentication.Duration.Value);
+                authentication.Modify();
+                Commit();
             }
-            else
-            {
-                Session sess = new();
-                sess.AccessToken.SetRange(token);
-                if (sess.FindFirst())
-                    userId = sess.UserID.Value;
-            }
+        }
 
-            if (userId.Length == 0)
+        public bool TryAuthenticateToken(string token)
+        {
+            Authentication authentication = new();
+            authentication.ID.SetRange(token);
+            authentication.ExpireDateTime.SetFilter(">={0}", DateTime.Now);
+            if (!authentication.FindFirst())
                 return false;
 
             User user = new();
-            if (!user.Get(userId))
+            if (!user.Get(authentication.UserID.Value))
                 return false;
 
             if (!user.Enabled.Value)
@@ -178,7 +176,7 @@ namespace Brayns.System
             CurrentSession.UserId = user.ID.Value;
             CurrentSession.IsSuperuser = user.Superuser.Value;
 
-            if ((CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT) && logAuth)
+            if ((CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT) && (!authentication.Session.Value))
             {
                 ApplicationLog log = new();
                 log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
@@ -223,7 +221,7 @@ namespace Brayns.System
             Shaper.Loader.Permissions.Set(perms);
         }
 
-        public Authentication CreateAuthenticationToken(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0)
+        public Authentication CreateAuthenticationToken(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0, bool forSession = false)
         {
             Authentication auth = new();
 
@@ -241,14 +239,16 @@ namespace Brayns.System
             }
 
             auth.CreationDateTime.Value = DateTime.Now;
-            auth.ExpireDateTime.Value = DateTime.Now.AddSeconds((expireSeconds > 0) ? expireSeconds : 30);  // allow refresh
             auth.UserID.Value = user.ID.Value;
+            auth.ExpireDateTime.Value = DateTime.Now.AddSeconds(expireSeconds);
+            auth.Session.Value = forSession;
+            auth.Duration.Value = expireSeconds;
             auth.Insert();
 
             return auth;
         }
 
-        public AccessTokenResponse AuthenticateUser(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0)
+        public AccessTokenResponse AuthenticateUser(User user, AccessTokenFormat tokenFormat = AccessTokenFormat.Guid, int expireSeconds = 0, bool forSession = false)
         {
             var session = new Session();
             if (!session.Get(CurrentSession.Id))
@@ -260,7 +260,7 @@ namespace Brayns.System
             user.LastLogin.Value = DateTime.Now;
             user.Modify();
 
-            var auth = CreateAuthenticationToken(user, tokenFormat, expireSeconds);
+            var auth = CreateAuthenticationToken(user, tokenFormat, expireSeconds, forSession);
 
             AccessTokenResponse token = new();
             token.token_type = "bearer";

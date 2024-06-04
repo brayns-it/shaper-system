@@ -14,15 +14,12 @@
         public Fields.Code UserID { get; } = new("User ID", Label("User ID"), 50);
         public Fields.Integer DatabaseID { get; } = new("Database ID", Label("Database ID"));
         public Fields.Boolean Active { get; } = new("Active", Label("Active"));
-        public Fields.Text AccessToken { get; } = new("Access token", Label("Access token"), 2048);
 
         public Session()
         {
             TableName = "Session";
             UnitCaption = Label("Session");
             TablePrimaryKey.Add(ID);
-
-            TableIndexes.Add("K01", AccessToken);
 
             AddRelation<User>(UserID);
         }

@@ -5,6 +5,7 @@
         AuthenticationManagement AuthMgmt = new();
 
         public int TokenDurationSec { get; set; } = 0;
+        public bool ForSession { get; set; } = false;
 
         public AccessTokenResponse Login(string idOrEmail, string password)
         {
@@ -39,9 +40,10 @@
             AccessTokenResponse result = AuthMgmt.AuthenticateUser(
                 user,
                 AccessTokenFormat.Guid,
-                TokenDurationSec);
+                TokenDurationSec,
+                ForSession);
 
-            DateTimeOffset? exp = (result.expires_in > 0) ? DateTimeOffset.Now.AddSeconds(result.expires_in) : null;
+            DateTimeOffset? exp = (!ForSession) ? DateTimeOffset.Now.AddSeconds(result.expires_in) : null;
             Client.SetAuthenticationToken(result.access_token, exp);
 
             return result;

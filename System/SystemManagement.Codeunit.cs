@@ -39,6 +39,7 @@
             if (CurrentSession.Database == null) return;
 
             Session session = new() { TableLock = true };
+            var authMgmt = new AuthenticationManagement();
 
             if (!sessionIsNew)
             {
@@ -51,18 +52,17 @@
                     session.LastDateTime.Value = DateTime.Now;
                     session.Active.Value = true;
                     session.Modify();
+
+                    if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId.Length > 0))
+                        authMgmt.RefreshSessionToken(CurrentSession.AuthenticationId);
                 }
                 return;
             }
 
-            bool viaToken = false;
             if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId.Length > 0))
             {
-                var authMgmt = new AuthenticationManagement();
                 if (!authMgmt.TryAuthenticateToken(CurrentSession.AuthenticationId))
                     Client.ClearAuthenticationToken();
-                else
-                    viaToken = true;
             }
 
             if (!session.Get(CurrentSession.Id))
@@ -83,8 +83,6 @@
             session.LastDateTime.Value = DateTime.Now;
             session.UserID.Value = CurrentSession.UserId;
             session.Active.Value = true;
-            if ((session.Type.Value == Shaper.SessionTypes.WEBCLIENT) && viaToken)
-                session.AccessToken.Value = CurrentSession.AuthenticationId!;
             session.Modify();
 
             var nfo = new Information();
