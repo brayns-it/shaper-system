@@ -35,7 +35,7 @@
             CurrentSession.IsSuperuser = false;
         }
 
-        private AccessTokenResponse AuthenticateUser(User user)
+        public AccessTokenResponse AuthenticateUser(User user)
         {
             AccessTokenResponse result = AuthMgmt.AuthenticateUser(
                 user,
