@@ -38,8 +38,8 @@
             {
                 var tools = new Controls.Action(acts, Label("Tools"), Icon.FromName("fas fa-gear"));
                 {
-                    var showPassword = new Controls.Action(tools, Label("View password"), Icon.FromName("fas fa-eye"));
-                    showPassword.Triggering += ShowPassword_Triggering;
+                    var viewDevicePassword = new Controls.Action(tools, Label("View device password"), Icon.FromName("fas fa-eye"));
+                    viewDevicePassword.Triggering += ViewDevicePassword_Triggering;
 
                     var tenYearToken = new Controls.Action(tools, Label("Generate 10-years token"), Icon.FromName("fas fa-ticket-alt"));
                     tenYearToken.Triggering += TenYearToken_Triggering;
@@ -47,12 +47,10 @@
             }
         }
 
-        private void ShowPassword_Triggering()
+        private void ViewDevicePassword_Triggering()
         {
-            if (Rec.Password.Value.StartsWith("crypt:"))
-                Message.Show(Functions.DecryptPassword(Rec.Password.Value.Substring(6)));
-            else
-                throw new Error(Label("Cannot show password, is hashed"));
+            if ((Rec.Type.Value == UserTypes.DEVICE) && (Rec.DevicePassword.Length > 0))
+                Message.Show(Rec.DevicePassword.Value);
         }
 
         private void TenYearToken_Triggering()

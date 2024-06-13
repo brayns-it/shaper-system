@@ -53,12 +53,7 @@ namespace Brayns.System
         {
             if (user.AuthenticationProvider.Value.Length == 0)
             {
-                if (user.Password.Value.StartsWith("crypt:"))
-                {
-                    if (Functions.DecryptPassword(user.Password.Value.Substring(6)) != password)
-                        throw ErrorInvalidCredentials(user.ID.Value);
-                }
-                else if (user.Password.Value == "plain:" + password)
+                if (user.Password.Value == "plain:" + password)
                 {
                     user.Password.Validate(password);
                     user.Modify();

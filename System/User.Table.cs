@@ -16,6 +16,7 @@
         public Fields.Text EMail { get; } = new("E-Mail", Label("E-Mail"), 100);
         public Fields.Boolean Enabled { get; } = new("Enabled", Label("Enabled"));
         public Fields.Text Password { get; } = new("Password", Label("Password"), 100);
+        public Fields.Text DevicePassword { get; } = new("Device password", Label("Device password"), 100);
         public Fields.DateTime LastLogin { get; } = new("Last login", Label("Last login"));
         public Fields.Boolean Superuser { get; } = new("Superuser", Label("Superuser"));
         public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
@@ -35,15 +36,15 @@
 
         private void Password_Validating()
         {
+            if (Type.Value == UserTypes.DEVICE)
+                DevicePassword.Value = Password.Value;
+
             Password.Value = HashPassword(Password.Value);
         }
 
         public string HashPassword(string pwd)
         {
-            if (Functions.ArePasswordReversbile())
-                return "crypt:" + Functions.EncryptPassword(pwd);
-            else
-                return Functions.Hash(pwd);
+            return Functions.Hash(pwd);
         }
     }
 }
