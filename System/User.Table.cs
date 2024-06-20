@@ -1,6 +1,6 @@
 ﻿namespace Brayns.System
 {
-    public class UserTypes : OptList
+    public partial class UserTypes : OptList
     {
         [Label("User")]
         public const int USER = 0;
@@ -16,12 +16,13 @@
         public Fields.Text EMail { get; } = new("E-Mail", Label("E-Mail"), 100);
         public Fields.Boolean Enabled { get; } = new("Enabled", Label("Enabled"));
         public Fields.Text Password { get; } = new("Password", Label("Password"), 100);
-        public Fields.Text DevicePassword { get; } = new("Device password", Label("Device password"), 100);
         public Fields.DateTime LastLogin { get; } = new("Last login", Label("Last login"));
         public Fields.Boolean Superuser { get; } = new("Superuser", Label("Superuser"));
         public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
         public Fields.Code AuthenticationProvider { get; } = new("Authentication provider", Label("Authentication provider"), 10);
         public Fields.Text AuthenticationID { get; } = new("Authentication ID", Label("Authentication ID"), 100);
+        
+        public event GenericHandler? PasswordBeforeHashing;
 
         public User()
         {
@@ -36,9 +37,7 @@
 
         private void Password_Validating()
         {
-            if (Type.Value == UserTypes.DEVICE)
-                DevicePassword.Value = Password.Value;
-
+            PasswordBeforeHashing?.Invoke();
             Password.Value = HashPassword(Password.Value);
         }
 
