@@ -159,6 +159,7 @@ namespace Brayns.System
                 return false;
 
             User user = new();
+            user.TableLock = true;
             if (!user.Get(authentication.UserID.Value))
                 return false;
 
@@ -177,10 +178,11 @@ namespace Brayns.System
                 log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
             }
 
+            Commit();
+
             if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
                 LoadPermissions();
-
-            Commit();
+                        
             return true;
         }
 
@@ -252,6 +254,8 @@ namespace Brayns.System
             session.UserID.Value = user.ID.Value;
             session.Modify();
 
+            user.TableLock = true;
+            user.Refresh();
             user.LastLogin.Value = DateTime.Now;
             user.Modify();
 
@@ -271,6 +275,8 @@ namespace Brayns.System
                 ApplicationLog log = new();
                 log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
             }
+
+            Commit();
 
             if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
                 LoadPermissions();
