@@ -4,6 +4,7 @@ namespace Brayns.System
 {
     public class SchedTaskMgmt : Codeunit
     {
+        private static int _lastEntryNo = 0;
         private static object _lockTasks = new();
         private static Dictionary<int, RunningTask> Tasks = new();
 
@@ -42,8 +43,22 @@ namespace Brayns.System
             var task = new ScheduledTask();
             task.NextRunTime.SetFilter("<={0}", DateTime.Now);
             task.Status.SetRange(ScheduledTaskStatus.ENABLED);
+            
+            // avoid stuck on always running processes
+            if (_lastEntryNo > 0) 
+            {
+                task.EntryNo.SetFilter(">{0}", _lastEntryNo);
+                if (task.IsEmpty())
+                {
+                    _lastEntryNo = 0;
+                    task.EntryNo.SetRange();
+                }
+            }
+
             if (task.FindFirst())
             {
+                _lastEntryNo = task.EntryNo.Value;
+
                 task.Status.Value = ScheduledTaskStatus.STARTING;
                 task.RunningServer.Value = CurrentSession.Server;
                 task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
