@@ -53,6 +53,8 @@
                     session.Active.Value = true;
                     session.Modify();
 
+                    CurrentSession.DatabaseDebug = session.DatabaseDebug.Value;
+
                     if ((CurrentSession.AuthenticationId != null) && (CurrentSession.AuthenticationId.Length > 0))
                         authMgmt.RefreshSessionToken(CurrentSession.AuthenticationId);
                 }

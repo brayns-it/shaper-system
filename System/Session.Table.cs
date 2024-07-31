@@ -14,6 +14,7 @@
         public Fields.Code UserID { get; } = new("User ID", Label("User ID"), 50);
         public Fields.Integer DatabaseID { get; } = new("Database ID", Label("Database ID"));
         public Fields.Boolean Active { get; } = new("Active", Label("Active"));
+        public Fields.Boolean DatabaseDebug { get; } = new("Database debug", Label("Database debug"));
 
         public Session()
         {

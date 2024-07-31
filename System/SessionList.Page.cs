@@ -8,7 +8,6 @@
         {
             UnitCaption = Label("Sessions");
             AllowInsert = false;
-            AllowDelete = false;
             AllowModify = false;
 
             var area = Controls.ContentArea.Create(this);
@@ -27,6 +26,20 @@
                     new Controls.Field(grid, Rec.LastDateTime);
                     new Controls.Field(grid, Rec.Active);
                 }
+            }
+
+            var actions = Controls.ActionArea.Create(this);
+            {
+                var tools = new Controls.Action(actions, Label("Tools"), Icon.FromName("fas fa-gear"));
+                {
+                    var toggleDbDebug = new Controls.Action(tools, Label("Toggle database debug"));
+                    toggleDbDebug.Triggering += () =>
+                    {
+                        Rec.Refresh();
+                        Rec.DatabaseDebug.Value = true;
+                        Rec.Modify();
+                    };
+                };
             }
 
             DataReading += SessionList_DataReading;
