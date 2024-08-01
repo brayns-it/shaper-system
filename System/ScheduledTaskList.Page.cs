@@ -36,6 +36,11 @@
                     Rec.SetDisabled();
                     Update();
                 };
+
+                var setup = new Controls.Action(actions, Label("Setup"), Icon.FromName("fas fa-gear"))
+                {
+                    Run = typeof(ScheduledTaskSetupCard)
+                };
             }
         }
     }

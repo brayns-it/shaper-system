@@ -85,6 +85,11 @@
                                 Run = typeof(ApplicationLogList)
                             };
 
+                            new Controls.Action(actSystem, Label("Mail"), Icon.FromName("fas fa-envelope"))
+                            {
+                                Run = typeof(MailSetupList)
+                            };
+
                             new Controls.Action(actSystem, Label("Setup"), Icon.FromName("fas fa-wrench"))
                             {
                                 Run = typeof(Shaper.Systems.Setup)
