@@ -37,6 +37,9 @@
         public Fields.Boolean RunOnSunday { get; } = new("Run on sunday", Label("Run on sunday"));
         public Fields.Time StartingTime { get; } = new("Starting time", Label("Starting time"));
         public Fields.Time EndingTime { get; } = new("Ending time", Label("Ending time"));
+        public Fields.Integer MaximumRetries { get; } = new("Maximum retries", Label("Maximum retries")) { BlankZero = true };
+        public Fields.Integer RetrySec { get; } = new("Retry (sec)", Label("Retry (sec)")) { BlankZero = true };
+        public Fields.Integer CurrentTry { get; } = new("Current try", Label("Current try"));
         public Fields.Integer IntervalSec { get; } = new("Interval (sec)", Label("Interval (sec)"));
         public Fields.Text ObjectName { get; } = new("Object name", Label("Object name"), 250);
         public Fields.Text MethodName { get; } = new("Method name", Label("Method name"), 250);
@@ -66,6 +69,13 @@
                 case ScheduledTaskStatus.STOPPING:
                     throw new Error(Label("Wait until {0} has been stopped", Description.Value));
             }
+        }
+
+        public void StartNow()
+        {
+            Status.Test(ScheduledTaskStatus.ENABLED);
+            NextRunTime.Value = DateTime.Now;
+            Modify();
         }
 
         public void SetDisabled()
@@ -104,6 +114,7 @@
 
                 NextRunTime.Value = dt2;
                 Status.Value = ScheduledTaskStatus.ENABLED;
+                CurrentTry.Value = 0;
                 Modify();
 
                 return;
@@ -143,6 +154,7 @@
 
                 NextRunTime.Value = dt;
                 Status.Value = ScheduledTaskStatus.ENABLED;
+                CurrentTry.Value = 0;
                 Modify();
 
                 return;

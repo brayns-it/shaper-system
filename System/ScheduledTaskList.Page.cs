@@ -21,21 +21,33 @@
 
             var actions = Controls.ActionArea.Create(this);
             {
-                var enable = new Controls.Action(actions, Label("Enable"), Icon.FromName("fas fa-check"));
-                enable.Triggering += () =>
+                var task = new Controls.Action(actions, Label("Task"));
                 {
-                    Rec.Refresh();
-                    Rec.SetEnabled();
-                    Update();
-                };
+                    var enable = new Controls.Action(task, Label("Enable"), Icon.FromName("fas fa-check"));
+                    enable.Triggering += () =>
+                    {
+                        Rec.Refresh();
+                        Rec.SetEnabled();
+                        Update();
+                    };
 
-                var disable = new Controls.Action(actions, Label("Disable"), Icon.FromName("fas fa-ban"));
-                disable.Triggering += () =>
-                {
-                    Rec.Refresh();
-                    Rec.SetDisabled();
-                    Update();
-                };
+                    var disable = new Controls.Action(task, Label("Disable"), Icon.FromName("fas fa-ban"));
+                    disable.Triggering += () =>
+                    {
+                        Rec.Refresh();
+                        Rec.SetDisabled();
+                        Update();
+                    };
+
+
+                    var startNow = new Controls.Action(task, Label("Start now"), Icon.FromName("fas fa-play"));
+                    startNow.Triggering += () =>
+                    {
+                        Rec.Refresh();
+                        Rec.StartNow();
+                        Update();
+                    };
+                }
 
                 var setup = new Controls.Action(actions, Label("Setup"), Icon.FromName("fas fa-gear"))
                 {

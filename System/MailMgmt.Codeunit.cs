@@ -53,6 +53,9 @@ namespace Brayns.System
             if (Setup.SmtpUser.Value.Length > 0)
                 client.Credentials = new NetworkCredential(Setup.SmtpUser.Value, Functions.DecryptString(Setup.SmtpPassword.Value));
 
+            if ((message.From == null) && (Setup.SmtpSender.Value.Length > 0))
+                message.From = new MailAddress(Setup.SmtpSender.Value);
+
             if (!HasHeader(message, "Message-ID"))
                 message.Headers.Add("Message-ID", "<" + Guid.NewGuid().ToString("n") + "@" + CurrentSession.Server + ">");
 
