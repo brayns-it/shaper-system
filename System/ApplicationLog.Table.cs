@@ -34,16 +34,38 @@
             AddRelation<User>(UserID);
         }
 
-        public void Add(Opt<ApplicationLogType> type, string message, string details = "")
+        public static void Add(Opt<ApplicationLogType> type, string message, string details = "")
         {
-            Init();
-            EventDateTime.Value = DateTime.Now;
-            LogType.Value = type;
-            Message.Value = message.Truncate(Message.Length);
-            UserID.Value = CurrentSession.UserId;
-            Address.Value = CurrentSession.Address;
-            Details.Value = details;
-            Insert();
+            var log = new ApplicationLog();
+            log.Init();
+            log.EventDateTime.Value = DateTime.Now;
+            log.LogType.Value = type;
+            log.Message.Value = message.Truncate(log.Message.Length);
+            log.UserID.Value = CurrentSession.UserId;
+            log.Address.Value = CurrentSession.Address;
+            log.Details.Value = details;
+            log.Insert();
+        }
+
+        public static void Add(Exception ex, string message)
+        {
+            Add(ApplicationLogType.ERROR, ex, message);
+        }
+
+        public static void Add(Opt<ApplicationLogType> type, Exception ex, string message)
+        {
+            var fe = new Brayns.Shaper.Classes.FormattedException(ex);
+            message = message + " " + fe.Message;
+
+            var log = new ApplicationLog();
+            log.Init();
+            log.EventDateTime.Value = DateTime.Now;
+            log.LogType.Value = type;
+            log.Message.Value = message.Truncate(log.Message.Length);
+            log.UserID.Value = CurrentSession.UserId;
+            log.Address.Value = CurrentSession.Address;
+            log.Details.Value = string.Join("\r\n", fe.Trace.ToArray());
+            log.Insert();
         }
     }
 }

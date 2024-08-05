@@ -115,8 +115,7 @@ namespace Brayns.System
             {
                 if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
                 {
-                    ApplicationLog log = new();
-                    log.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", idOrEmail));
+                    ApplicationLog.Add(ApplicationLogType.SECURITY, Label("User {0} failed login", idOrEmail));
                     Commit();
                 }
 
@@ -173,10 +172,7 @@ namespace Brayns.System
             CurrentSession.IsSuperuser = user.Superuser.Value;
 
             if ((CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT) && (!authentication.Session.Value))
-            {
-                ApplicationLog log = new();
-                log.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
-            }
+                ApplicationLog.Add(ApplicationLogType.INFORMATION, Label("User logged in (token)"));
 
             Commit();
 
@@ -271,10 +267,7 @@ namespace Brayns.System
             CurrentSession.IsSuperuser = user.Superuser.Value;
 
             if (CurrentSession.Type == Shaper.SessionTypes.WEBCLIENT)
-            {
-                ApplicationLog log = new();
-                log.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
-            }
+                ApplicationLog.Add(ApplicationLogType.INFORMATION, Label("User logged in"));
 
             Commit();
 
