@@ -76,7 +76,19 @@ msgid "Creation date/time"
 msgstr ""
 
 msgctxt "Brayns.System.Authentication"
-msgid "Expire  date/time"
+msgid "Expire date/time"
+msgstr ""
+
+msgctxt "Brayns.System.Authentication"
+msgid "Duration (sec.)"
+msgstr ""
+
+msgctxt "Brayns.System.Authentication"
+msgid "System created"
+msgstr ""
+
+msgctxt "Brayns.System.Authentication"
+msgid "Session"
 msgstr ""
 
 msgctxt "Brayns.System.Authentication"
@@ -223,6 +235,98 @@ msgctxt "Brayns.System.Login"
 msgid "Login"
 msgstr ""
 
+msgctxt "Brayns.System.MailMgmt"
+msgid "Invalid mail protocol"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupProtocol"
+msgid "SMTP"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "Profile code"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "Description"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "Protocol"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "Default"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP server"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP port"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP user"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP password"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP sender"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "SMTP use TLS"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetup"
+msgid "Mail setup"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Test address"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Mail setup"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "General"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "SMTP"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Test"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Send test"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Test mail from {0}"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Test mail from {0} sent via {1}"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupCard"
+msgid "Mail message sent successfully"
+msgstr ""
+
+msgctxt "Brayns.System.MailSetupList"
+msgid "Mail setup"
+msgstr ""
+
 msgctxt "Brayns.System.Notification"
 msgid "Entry No."
 msgstr ""
@@ -324,15 +428,23 @@ msgid "Roles"
 msgstr ""
 
 msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Task {0} was running, next run time {1}"
+msgstr ""
+
+msgctxt "Brayns.System.SchedTaskMgmt"
 msgid "Task {0} was running, setting in error"
 msgstr ""
 
 msgctxt "Brayns.System.SchedTaskMgmt"
-msgid "Task {0} unhandled error"
+msgid "Task {0} retry {2}"
 msgstr ""
 
 msgctxt "Brayns.System.SchedTaskMgmt"
-msgid "Task {0} error {1}"
+msgid "Task {0}"
+msgstr ""
+
+msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Task {0} error, {1}"
 msgstr ""
 
 msgctxt "Brayns.System.ScheduledTaskStatus"
@@ -416,6 +528,18 @@ msgid "Ending time"
 msgstr ""
 
 msgctxt "Brayns.System.ScheduledTask"
+msgid "Maximum retries"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Retry (sec)"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
+msgid "Current try"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTask"
 msgid "Interval (sec)"
 msgstr ""
 
@@ -476,6 +600,10 @@ msgid "Schedule"
 msgstr ""
 
 msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Task"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskCard"
 msgid "Enable"
 msgstr ""
 
@@ -483,8 +611,16 @@ msgctxt "Brayns.System.ScheduledTaskCard"
 msgid "Disable"
 msgstr ""
 
+msgctxt "Brayns.System.ScheduledTaskCard"
+msgid "Start now"
+msgstr ""
+
 msgctxt "Brayns.System.ScheduledTaskList"
 msgid "Scheduled tasks"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Task"
 msgstr ""
 
 msgctxt "Brayns.System.ScheduledTaskList"
@@ -493,6 +629,46 @@ msgstr ""
 
 msgctxt "Brayns.System.ScheduledTaskList"
 msgid "Disable"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Start now"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskList"
+msgid "Setup"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Primary key"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Mail profile"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Mail sender address"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Mail recipient address"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Notify if error"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetup"
+msgid "Scheduled task setup"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetupCard"
+msgid "Scheduled task setup"
+msgstr ""
+
+msgctxt "Brayns.System.ScheduledTaskSetupCard"
+msgid "Notifications"
 msgstr ""
 
 msgctxt "Brayns.System.Session"
@@ -544,7 +720,7 @@ msgid "Active"
 msgstr ""
 
 msgctxt "Brayns.System.Session"
-msgid "Access token"
+msgid "Database debug"
 msgstr ""
 
 msgctxt "Brayns.System.Session"
@@ -557,6 +733,14 @@ msgstr ""
 
 msgctxt "Brayns.System.SessionList"
 msgid "Sessions"
+msgstr ""
+
+msgctxt "Brayns.System.SessionList"
+msgid "Tools"
+msgstr ""
+
+msgctxt "Brayns.System.SessionList"
+msgid "Toggle database debug"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
@@ -620,6 +804,10 @@ msgid "Log"
 msgstr ""
 
 msgctxt "Brayns.System.Start"
+msgid "Mail"
+msgstr ""
+
+msgctxt "Brayns.System.Start"
 msgid "Setup"
 msgstr ""
 
@@ -637,6 +825,10 @@ msgstr ""
 
 msgctxt "Brayns.System.TokenList"
 msgid "Authentication Tokens"
+msgstr ""
+
+msgctxt "Brayns.System.TokenList"
+msgid "View token"
 msgstr ""
 
 msgctxt "Brayns.System.Upgrades"
@@ -717,6 +909,18 @@ msgstr ""
 
 msgctxt "Brayns.System.UserCard"
 msgid "External authentication"
+msgstr ""
+
+msgctxt "Brayns.System.UserCard"
+msgid "Tools"
+msgstr ""
+
+msgctxt "Brayns.System.UserCard"
+msgid "Generate 10-years token"
+msgstr ""
+
+msgctxt "Brayns.System.UserCard"
+msgid "Generate 10-years token for {0}?"
 msgstr ""
 
 msgctxt "Brayns.System.UserList"
