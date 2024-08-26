@@ -47,13 +47,12 @@ namespace Brayns.System
             var mailMgmt = new MailMgmt();
             mailMgmt.SetProfile(Rec.ProfileCode.Value);
 
-            var msg = new MailMessage();
-            msg.From = new MailAddress(Rec.SmtpSender.Value);
-            msg.To.Add(new MailAddress(TestAddress.Value));
-            msg.Subject = Label("Test mail from {0}", CurrentSession.ApplicationName);
-            msg.Body = Label("Test mail from {0} sent via {1}", CurrentSession.ApplicationName, Rec.Description.Value);
+            mailMgmt.Message.From = new MailAddress(Rec.SmtpSender.Value);
+            mailMgmt.Message.To.Add(new MailAddress(TestAddress.Value));
+            mailMgmt.Message.Subject = Label("Test mail from {0}", CurrentSession.ApplicationName);
+            mailMgmt.Message.Body = Label("Test mail from {0} sent via {1}", CurrentSession.ApplicationName, Rec.Description.Value);
 
-            mailMgmt.Send(msg);
+            mailMgmt.Send();
 
             Message.Show(Label("Mail message sent successfully"));
         }

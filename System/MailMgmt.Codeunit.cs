@@ -6,12 +6,15 @@ namespace Brayns.System
     public class MailMgmt : Codeunit
     {
         public MailSetup Setup { get; private set; }
+        public MailMessage Message { get; set; }
 
         public MailMgmt()
         {
             Setup = new MailSetup();
             Setup.Default.SetRange(true);
             Setup.FindFirst();
+
+            Message = new();
         }
 
         public void SetProfile(string code)
@@ -20,12 +23,12 @@ namespace Brayns.System
                 Setup.Init();
         }
 
-        public void Send(MailMessage message)
+        public void Send()
         {
             switch (Setup.Protocol.Value)
             {
                 case MailSetupProtocol.SMTP:
-                    SendSmtp(message);
+                    SendSmtp();
                     break;
 
                 default:
@@ -33,16 +36,16 @@ namespace Brayns.System
             }
         }
 
-        private bool HasHeader(MailMessage message, string key)
+        private bool HasHeader(string key)
         {
-            foreach (string hdr in message.Headers.Keys)
+            foreach (string hdr in Message.Headers.Keys)
                 if (hdr.Equals(key, StringComparison.OrdinalIgnoreCase))
                     return true;
 
             return false;
         }
 
-        private void SendSmtp(MailMessage message)
+        private void SendSmtp()
         {
             Setup.SmtpServer.Test();
 
@@ -53,13 +56,13 @@ namespace Brayns.System
             if (Setup.SmtpUser.Value.Length > 0)
                 client.Credentials = new NetworkCredential(Setup.SmtpUser.Value, Functions.DecryptString(Setup.SmtpPassword.Value));
 
-            if ((message.From == null) && (Setup.SmtpSender.Value.Length > 0))
-                message.From = new MailAddress(Setup.SmtpSender.Value);
+            if ((Message.From == null) && (Setup.SmtpSender.Value.Length > 0))
+                Message.From = new MailAddress(Setup.SmtpSender.Value);
 
-            if (!HasHeader(message, "Message-ID"))
-                message.Headers.Add("Message-ID", "<" + Guid.NewGuid().ToString("n") + "@" + CurrentSession.Server + ">");
+            if (!HasHeader("Message-ID"))
+                Message.Headers.Add("Message-ID", "<" + Guid.NewGuid().ToString("n") + "@" + CurrentSession.Server + ">");
 
-            client.Send(message);
+            client.Send(Message);
         }
 
     }

@@ -3,6 +3,8 @@ using System.Net.Mail;
 
 namespace Brayns.System
 {
+    public delegate void SchedTaskNotifyHandler(MailMessage msg);
+
     public class SchedTaskMgmt : Codeunit
     {
         private static int _lastEntryNo = 0;
@@ -168,7 +170,7 @@ namespace Brayns.System
             }
         }
 
-        private static void TryNotifyError(ScheduledTask task, Exception ex)
+        public static void TryNotifyError(Exception ex, SchedTaskNotifyHandler? onMessage)
         {
             try
             {
@@ -182,21 +184,27 @@ namespace Brayns.System
                 if (schedSetup.MailProfile.Value.Length > 0)
                     mailMgmt.SetProfile(schedSetup.MailProfile.Value);
 
-                var msg = new MailMessage();
                 if (schedSetup.MailSenderAddress.Value.Length > 0)
-                    msg.From = new MailAddress(schedSetup.MailSenderAddress.Value);
+                    mailMgmt.Message.From = new MailAddress(schedSetup.MailSenderAddress.Value);
 
-                msg.To.Add(new MailAddress(schedSetup.MailRecipientAddress.Value));
-                msg.Subject = Label("Task {0} error, {1}", task.Description.Value, CurrentSession.ApplicationName);
-                msg.IsBodyHtml = true;
-                msg.Body = "<p><b>" + fe.Message + "</b></p><pre>" + string.Join("\r\n", fe.Trace.ToArray()) + "</pre>";
+                mailMgmt.Message.To.Add(new MailAddress(schedSetup.MailRecipientAddress.Value));
+                mailMgmt.Message.Subject = Label("Error in {0}", CurrentSession.ApplicationName);
+                mailMgmt.Message.IsBodyHtml = true;
+                mailMgmt.Message.Body = "<p><b>" + fe.Message + "</b></p><pre>" + string.Join("\r\n", fe.Trace.ToArray()) + "</pre>";
 
-                mailMgmt.Send(msg);
+                onMessage?.Invoke(mailMgmt.Message);
+
+                mailMgmt.Send();
             }
             catch
             {
                 // do nothing
             }
+        }
+
+        private static void TryNotifyError(ScheduledTask task, Exception ex)
+        {
+            TryNotifyError(ex, (msg) => msg.Subject = Label("Task {0} error, {1}", task.Description.Value, CurrentSession.ApplicationName));
         }
 
         private static void Task_Starting(RunningTask sender)
