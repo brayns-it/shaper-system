@@ -444,6 +444,10 @@ msgid "Task {0}"
 msgstr ""
 
 msgctxt "Brayns.System.SchedTaskMgmt"
+msgid "Error in {0}"
+msgstr ""
+
+msgctxt "Brayns.System.SchedTaskMgmt"
 msgid "Task {0} error, {1}"
 msgstr ""
 
