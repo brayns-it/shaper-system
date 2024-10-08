@@ -103,6 +103,18 @@
 
             Loading += Start_Loading;
             UnitPolling += Start_UnitPolling;
+            Loaded += Start_Loaded;
+        }
+
+        private void Start_Loaded()
+        {
+            var user = new User();
+            user.Get(CurrentSession.UserId);
+            if (user.StartPageName.Value.Length > 0)
+            {
+                var prx = Shaper.Loader.Proxy.CreateFromName(user.StartPageName.Value);
+                prx.GetObject<BasePage>().Run();
+            }
         }
 
         private void GetNotifications()

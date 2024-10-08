@@ -21,7 +21,8 @@
         public Fields.Option<UserTypes> Type { get; } = new("Type", Label("Type"));
         public Fields.Code AuthenticationProvider { get; } = new("Authentication provider", Label("Authentication provider"), 10);
         public Fields.Text AuthenticationID { get; } = new("Authentication ID", Label("Authentication ID"), 100);
-        
+        public Fields.Text StartPageName { get; } = new("Start page name", Label("Start page name"), 250);
+
         public event GenericHandler? PasswordBeforeHashing;
 
         public User()
