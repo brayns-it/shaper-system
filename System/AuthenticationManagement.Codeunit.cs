@@ -250,8 +250,7 @@ namespace Brayns.System
             session.UserID.Value = user.ID.Value;
             session.Modify();
 
-            user.TableLock = true;
-            user.Refresh();
+            user.Reload(true);
             user.LastLogin.Value = DateTime.Now;
             user.Modify();
 

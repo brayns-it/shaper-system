@@ -48,7 +48,7 @@
                     var enable = new Controls.Action(task, Label("Enable"), Icon.FromName("fas fa-check"));
                     enable.Triggering += () =>
                     {
-                        Rec.Refresh();
+                        Rec.Reload();
                         Rec.SetEnabled();
                         Update();
                     };
@@ -56,7 +56,7 @@
                     var disable = new Controls.Action(task, Label("Disable"), Icon.FromName("fas fa-ban"));
                     disable.Triggering += () =>
                     {
-                        Rec.Refresh();
+                        Rec.Reload();
                         Rec.SetDisabled();
                         Update();
                     };
@@ -65,7 +65,7 @@
                     var startNow = new Controls.Action(task, Label("Start now"), Icon.FromName("fas fa-play"));
                     startNow.Triggering += () =>
                     {
-                        Rec.Refresh();
+                        Rec.Reload();
                         Rec.StartNow();
                         Update();
                     };

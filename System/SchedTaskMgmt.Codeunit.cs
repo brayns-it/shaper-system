@@ -156,7 +156,7 @@ namespace Brayns.System
                 task.NextRunTime.Value = DateTime.Now.AddSeconds(task.RetrySec.Value);
                 task.Modify();
 
-                ApplicationLog.Add(ApplicationLogType.WARNING, ex, Label("Task {0} retry {2}", task.Description.Value, task.CurrentTry.Value));
+                ApplicationLog.Add(ApplicationLogType.WARNING, ex, Label("Task {0} retry {1}", task.Description.Value, task.CurrentTry.Value));
             }
             else
             {

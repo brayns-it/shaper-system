@@ -35,7 +35,7 @@
                     var toggleDbDebug = new Controls.Action(tools, Label("Toggle database debug"));
                     toggleDbDebug.Triggering += () =>
                     {
-                        Rec.Refresh();
+                        Rec.Reload();
                         Rec.DatabaseDebug.Value = true;
                         Rec.Modify();
                     };
