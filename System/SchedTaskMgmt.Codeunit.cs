@@ -150,7 +150,8 @@ namespace Brayns.System
             ClearTask(task);
             RemoveFromList(task);
 
-            if ((task.MaximumRetries.Value > 0) && (task.CurrentTry.Value < task.MaximumRetries.Value) && (task.RetrySec.Value > 0))
+            if ((task.MaximumRetries.Value > 0) && (task.CurrentTry.Value < task.MaximumRetries.Value) && 
+                (task.RetrySec.Value > 0) && (task.NextRunTime.Value > DateTime.MinValue))
             {
                 task.Status.Value = ScheduledTaskStatus.ENABLED;
                 task.NextRunTime.Value = DateTime.Now.AddSeconds(task.RetrySec.Value);
@@ -168,6 +169,11 @@ namespace Brayns.System
                 Commit();
                 TryNotifyError(task, ex);
             }
+        }
+
+        public static void TryNotifyError(SchedTaskNotifyHandler? onMessage)
+        {
+            TryNotifyError(new Exception(), onMessage);
         }
 
         public static void TryNotifyError(Exception ex, SchedTaskNotifyHandler? onMessage)
@@ -213,6 +219,7 @@ namespace Brayns.System
             task.Get((int)sender.Tag!);
             task.RunningSessionID.Value = CurrentSession.Id;
             task.Status.Value = ScheduledTaskStatus.RUNNING;
+            task.LastRunTime.Value = DateTime.Now;
             task.Modify();
         }
     }

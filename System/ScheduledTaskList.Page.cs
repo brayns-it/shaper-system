@@ -15,6 +15,7 @@
                     new Controls.Field(grid, Rec.ObjectName);
                     new Controls.Field(grid, Rec.MethodName);
                     new Controls.Field(grid, Rec.NextRunTime);
+                    new Controls.Field(grid, Rec.LastRunTime);
                     new Controls.Field(grid, Rec.Status);
                 }
             }
@@ -27,7 +28,7 @@
                     enable.Triggering += () =>
                     {
                         Rec.Reload();
-                        Rec.SetEnabled();
+                        Rec.SetEnabled(DateTime.Now);
                         Update();
                     };
 

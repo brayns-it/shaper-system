@@ -45,6 +45,7 @@
         public Fields.Text MethodName { get; } = new("Method name", Label("Method name"), 250);
         public Fields.Text Parameter { get; } = new("Parameter", Label("Parameter"), 250);
         public Fields.DateTime NextRunTime { get; } = new("Next run time", Label("Next run time"));
+        public Fields.DateTime LastRunTime { get; } = new("Last run time", Label("Last run time"));
         public Fields.Guid RunningSessionID { get; } = new("Running session ID", Label("Running session ID"));
         public Fields.Text RunningEnvironment { get; } = new("Running environment", Label("Running environment"), 100);
         public Fields.Text RunningServer { get; } = new("Running server", Label("Running server"), 100);
@@ -73,8 +74,12 @@
 
         public void StartNow()
         {
-            Status.Test(ScheduledTaskStatus.ENABLED);
-            NextRunTime.Value = DateTime.Now;
+            if ((Status.Value != ScheduledTaskStatus.ENABLED) && (Status.Value != ScheduledTaskStatus.DISABLED) &&
+                (Status.Value != ScheduledTaskStatus.ERROR))
+                throw new Error(Label("Status cannot be {0}", Status.Value));
+
+            Status.Value = ScheduledTaskStatus.ENABLED;
+            NextRunTime.Value = DateTime.MinValue;
             Modify();
         }
 
@@ -96,13 +101,25 @@
             }
         }
 
-        public void SetEnabled()
+        public void SetEnabled(DateTime? nextRunTime = null)
         {
             if (Status.Value == ScheduledTaskStatus.STOPPING)
                 throw new Error(Label("Wait until {0} has been stopped", Description.Value));
 
             if (Status.Value == ScheduledTaskStatus.STARTING)
                 throw new Error(Label("Wait until {0} has been started", Description.Value));
+
+            if (nextRunTime != null)
+                NextRunTime.Value = nextRunTime.Value;
+
+            if (NextRunTime.Value == DateTime.MinValue)
+            {
+                Status.Value = ScheduledTaskStatus.DISABLED;
+                CurrentTry.Value = 0;
+                Modify();
+
+                return;
+            }
 
             IntervalSec.Test();
 
