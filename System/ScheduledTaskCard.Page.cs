@@ -61,12 +61,19 @@
                         Update();
                     };
 
-
                     var startNow = new Controls.Action(task, Label("Start now"), Icon.FromName("fas fa-play"));
                     startNow.Triggering += () =>
                     {
                         Rec.Reload();
                         Rec.StartNow();
+                        Update();
+                    };
+
+                    var debug = new Controls.Action(task, Label("Debug"), Icon.FromName("fas fa-bug"));
+                    debug.Triggering += () =>
+                    {
+                        Rec.Reload();
+                        Rec.StartAsDebug();
                         Update();
                     };
                 }

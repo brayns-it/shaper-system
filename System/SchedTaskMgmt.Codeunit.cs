@@ -4,12 +4,15 @@ using System.Net.Mail;
 namespace Brayns.System
 {
     public delegate void SchedTaskNotifyHandler(MailMessage msg);
+    public delegate void SchedTaskSelectingHandler(ScheduledTask task);
 
     public class SchedTaskMgmt : Codeunit
     {
         private static int _lastEntryNo = 0;
         private static object _lockTasks = new();
         private static Dictionary<int, RunningTask> Tasks = new();
+
+        public static event SchedTaskSelectingHandler? TaskSelecting;
 
         public static void ApplicationInitialize()
         {
@@ -53,6 +56,7 @@ namespace Brayns.System
             var task = new ScheduledTask();
             task.NextRunTime.SetFilter("<={0}", DateTime.Now);
             task.Status.SetRange(ScheduledTaskStatus.ENABLED);
+            TaskSelecting?.Invoke(task);
 
             // avoid stuck on always running processes
             if (_lastEntryNo > 0)

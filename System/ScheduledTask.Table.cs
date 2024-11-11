@@ -19,6 +19,9 @@
 
         [Label("Starting")]
         public const int STARTING = 5;
+
+        [Label("Debug")]
+        public const int DEBUG = 6;
     }
 
     public class ScheduledTask : Table<ScheduledTask>
@@ -72,6 +75,17 @@
             }
         }
 
+        public void StartAsDebug()
+        {
+            if ((Status.Value != ScheduledTaskStatus.ENABLED) && (Status.Value != ScheduledTaskStatus.DISABLED) &&
+                (Status.Value != ScheduledTaskStatus.ERROR))
+                throw new Error(Label("Status cannot be {0}", Status.Value));
+
+            Status.Value = ScheduledTaskStatus.DEBUG;
+            NextRunTime.Value = DateTime.MinValue;
+            Modify();
+        }
+
         public void StartNow()
         {
             if ((Status.Value != ScheduledTaskStatus.ENABLED) && (Status.Value != ScheduledTaskStatus.DISABLED) &&
@@ -87,6 +101,7 @@
         {
             switch (Status.Value)
             {
+                case ScheduledTaskStatus.DEBUG:
                 case ScheduledTaskStatus.ENABLED:
                 case ScheduledTaskStatus.ERROR:
                     Status.Value = ScheduledTaskStatus.DISABLED;
