@@ -37,6 +37,7 @@ namespace Brayns.System
                             catch
                             {
                                 schedTask.Status.Value = ScheduledTaskStatus.ERROR;
+                                schedTask.RunOnce.Value = false;
                                 schedTask.Modify();
 
                                 ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} was running, setting in error", schedTask.Description.Value));
@@ -45,6 +46,7 @@ namespace Brayns.System
 
                         case ScheduledTaskStatus.STOPPING:
                             schedTask.Status.Value = ScheduledTaskStatus.DISABLED;
+                            schedTask.RunOnce.Value = false;
                             schedTask.Modify();
                             break;
                     }
@@ -111,6 +113,7 @@ namespace Brayns.System
                         {
                             ClearTask(task);
                             task.Status.Value = ScheduledTaskStatus.DISABLED;
+                            task.RunOnce.Value = false;
                             task.Modify();
                             Commit();
                         }
@@ -155,7 +158,7 @@ namespace Brayns.System
             RemoveFromList(task);
 
             if ((task.MaximumRetries.Value > 0) && (task.CurrentTry.Value < task.MaximumRetries.Value) && 
-                (task.RetrySec.Value > 0) && (task.NextRunTime.Value > DateTime.MinValue))
+                (task.RetrySec.Value > 0) && (task.NextRunTime.Value > DateTime.MinValue) && (!task.RunOnce.Value))
             {
                 task.Status.Value = ScheduledTaskStatus.ENABLED;
                 task.NextRunTime.Value = DateTime.Now.AddSeconds(task.RetrySec.Value);
@@ -166,6 +169,7 @@ namespace Brayns.System
             else
             {
                 task.Status.Value = ScheduledTaskStatus.ERROR;
+                task.RunOnce.Value = false;
                 task.Modify();
 
                 ApplicationLog.Add(ex, Label("Task {0}", task.Description.Value));

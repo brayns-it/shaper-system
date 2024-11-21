@@ -49,7 +49,7 @@
                     enable.Triggering += () =>
                     {
                         Rec.Reload();
-                        Rec.SetEnabled(DateTime.Now);
+                        Rec.SetEnabled();
                         Update();
                     };
 

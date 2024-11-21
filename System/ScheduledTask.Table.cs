@@ -49,6 +49,7 @@
         public Fields.Text Parameter { get; } = new("Parameter", Label("Parameter"), 250);
         public Fields.DateTime NextRunTime { get; } = new("Next run time", Label("Next run time"));
         public Fields.DateTime LastRunTime { get; } = new("Last run time", Label("Last run time"));
+        public Fields.Boolean RunOnce { get; } = new("Run once", Label("Run once"));
         public Fields.Guid RunningSessionID { get; } = new("Running session ID", Label("Running session ID"));
         public Fields.Text RunningEnvironment { get; } = new("Running environment", Label("Running environment"), 100);
         public Fields.Text RunningServer { get; } = new("Running server", Label("Running server"), 100);
@@ -82,7 +83,8 @@
                 throw new Error(Label("Status cannot be {0}", Status.Value));
 
             Status.Value = ScheduledTaskStatus.DEBUG;
-            NextRunTime.Value = DateTime.MinValue;
+            NextRunTime.Value = DateTime.Now;
+            RunOnce.Value = true;
             Modify();
         }
 
@@ -93,7 +95,9 @@
                 throw new Error(Label("Status cannot be {0}", Status.Value));
 
             Status.Value = ScheduledTaskStatus.ENABLED;
-            NextRunTime.Value = DateTime.MinValue;
+            NextRunTime.Value = DateTime.Now;
+            if (Status.Value != ScheduledTaskStatus.ENABLED)
+                RunOnce.Value = true;
             Modify();
         }
 
@@ -116,7 +120,7 @@
             }
         }
 
-        public void SetEnabled(DateTime? nextRunTime = null)
+        public void SetEnabled()
         {
             if (Status.Value == ScheduledTaskStatus.STOPPING)
                 throw new Error(Label("Wait until {0} has been stopped", Description.Value));
@@ -124,13 +128,11 @@
             if (Status.Value == ScheduledTaskStatus.STARTING)
                 throw new Error(Label("Wait until {0} has been started", Description.Value));
 
-            if (nextRunTime != null)
-                NextRunTime.Value = nextRunTime.Value;
-
-            if (NextRunTime.Value == DateTime.MinValue)
+            if (RunOnce.Value)
             {
                 Status.Value = ScheduledTaskStatus.DISABLED;
                 CurrentTry.Value = 0;
+                RunOnce.Value = false;
                 Modify();
 
                 return;
