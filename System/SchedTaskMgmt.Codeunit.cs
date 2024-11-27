@@ -26,13 +26,15 @@ namespace Brayns.System
                     {
                         case ScheduledTaskStatus.RUNNING:
                         case ScheduledTaskStatus.STARTING:
-                            schedTask.Status.Value = ScheduledTaskStatus.ENABLED;
+                            schedTask.Status.Value = ScheduledTaskStatus.DISABLED;
                             schedTask.Modify();
 
                             try
                             {
                                 schedTask.SetEnabled();
-                                ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} was running, next run time {1}", schedTask.Description.Value, schedTask.NextRunTime.Value));
+
+                                if (schedTask.Status.Value == ScheduledTaskStatus.ENABLED)
+                                    ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} was running, next run time {1}", schedTask.Description.Value, schedTask.NextRunTime.Value));
                             }
                             catch
                             {
@@ -157,7 +159,13 @@ namespace Brayns.System
             ClearTask(task);
             RemoveFromList(task);
 
-            if ((task.MaximumRetries.Value > 0) && (task.CurrentTry.Value < task.MaximumRetries.Value) && 
+            if (task.Status.Value == ScheduledTaskStatus.STOPPING)
+            {
+                task.Status.Value = ScheduledTaskStatus.DISABLED;
+                task.RunOnce.Value = false;
+                task.Modify();
+            }
+            else if ((task.MaximumRetries.Value > 0) && (task.CurrentTry.Value < task.MaximumRetries.Value) &&
                 (task.RetrySec.Value > 0) && (task.NextRunTime.Value > DateTime.MinValue) && (!task.RunOnce.Value))
             {
                 task.Status.Value = ScheduledTaskStatus.ENABLED;
