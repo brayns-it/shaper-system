@@ -77,26 +77,44 @@ namespace Brayns.System
             {
                 _lastEntryNo = task.EntryNo.Value;
 
-                task.Status.Value = ScheduledTaskStatus.STARTING;
-                task.CurrentTry.Value++;
-                task.RunningServer.Value = CurrentSession.Server;
-                task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
-                task.Modify();
-                Commit();
+                if (!Tasks.ContainsKey(task.EntryNo.Value))
+                {
+                    task.Status.Value = ScheduledTaskStatus.STARTING;
+                    task.CurrentTry.Value++;
+                    task.RunningServer.Value = CurrentSession.Server;
+                    task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
+                    task.Modify();
+                    Commit();
 
-                RunningTask rt = new();
-                rt.Tag = task.EntryNo.Value;
-                rt.TypeName = task.ObjectName.Value;
-                rt.MethodName = task.MethodName.Value;
-                rt.Parameters = task.Parameter.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                rt.Starting += Task_Starting;
-                rt.Error += Task_Error;
-                rt.Finishing += Task_Finishing;
+                    RunningTask rt = new();
+                    rt.Tag = task.EntryNo.Value;
+                    rt.TypeName = task.ObjectName.Value;
+                    rt.MethodName = task.MethodName.Value;
+                    rt.Parameters = task.Parameter.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    rt.Starting += Task_Starting;
+                    rt.Error += Task_Error;
+                    rt.Finishing += Task_Finishing;
 
-                lock (_lockTasks)
-                    Tasks.Add(task.EntryNo.Value, rt);
+                    lock (_lockTasks)
+                        Tasks.Add(task.EntryNo.Value, rt);
 
-                rt.Start();
+                    rt.Start();
+                }
+                else
+                {
+                    if (!Tasks[task.EntryNo.Value].IsAlive)
+                        RemoveFromList(task.EntryNo.Value);
+                    else
+                    {
+                        ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} not unloaded, disabling", task.Description.Value));
+
+                        ClearTask(task);
+                        task.Status.Value = ScheduledTaskStatus.DISABLED;
+                        task.RunOnce.Value = false;
+                        task.Modify();
+                        Commit();
+                    }
+                }
             }
 
             // stop request
@@ -123,12 +141,12 @@ namespace Brayns.System
                 }
         }
 
-        private static void RemoveFromList(ScheduledTask task)
+        private static void RemoveFromList(int taskNo)
         {
             lock (_lockTasks)
             {
-                if (Tasks.ContainsKey(task.EntryNo.Value))
-                    Tasks.Remove(task.EntryNo.Value);
+                if (Tasks.ContainsKey(taskNo))
+                    Tasks.Remove(taskNo);
             }
         }
 
@@ -141,23 +159,24 @@ namespace Brayns.System
 
         private static void Task_Finishing(RunningTask sender)
         {
+            int taskNo = (int)sender.Tag!;
+            RemoveFromList(taskNo);
+
             ScheduledTask task = new();
-            task.Get((int)sender.Tag!);
-
+            task.Get(taskNo);
             ClearTask(task);
-            RemoveFromList(task);
-
             task.SetEnabled();
             task.Modify();
         }
 
         private static void Task_Error(RunningTask sender, Exception ex)
         {
-            ScheduledTask task = new();
-            task.Get((int)sender.Tag!);
+            int taskNo = (int)sender.Tag!;
+            RemoveFromList(taskNo);
 
+            ScheduledTask task = new();
+            task.Get(taskNo);
             ClearTask(task);
-            RemoveFromList(task);
 
             if (task.Status.Value == ScheduledTaskStatus.STOPPING)
             {
