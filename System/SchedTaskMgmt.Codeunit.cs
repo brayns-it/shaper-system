@@ -106,11 +106,9 @@ namespace Brayns.System
                         RemoveFromList(task.EntryNo.Value);
                     else
                     {
-                        ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} not unloaded, disabling", task.Description.Value));
+                        ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} is still running", task.Description.Value));
 
-                        ClearTask(task);
-                        task.Status.Value = ScheduledTaskStatus.DISABLED;
-                        task.RunOnce.Value = false;
+                        task.Status.Value = ScheduledTaskStatus.RUNNING;
                         task.Modify();
                         Commit();
                     }
