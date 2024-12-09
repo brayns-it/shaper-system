@@ -94,10 +94,10 @@
                 (Status.Value != ScheduledTaskStatus.ERROR))
                 throw new Error(Label("Status cannot be {0}", Status.Value));
 
-            Status.Value = ScheduledTaskStatus.ENABLED;
-            NextRunTime.Value = DateTime.Now;
             if (Status.Value != ScheduledTaskStatus.ENABLED)
                 RunOnce.Value = true;
+            Status.Value = ScheduledTaskStatus.ENABLED;
+            NextRunTime.Value = DateTime.Now;
             Modify();
         }
 

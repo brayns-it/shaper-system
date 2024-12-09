@@ -59,7 +59,11 @@ namespace Brayns.System
         {
             var task = new ScheduledTask();
             task.NextRunTime.SetFilter("<={0}", DateTime.Now);
+#if DEBUG
+            task.Status.SetRange(ScheduledTaskStatus.DEBUG);
+#else
             task.Status.SetRange(ScheduledTaskStatus.ENABLED);
+#endif
             TaskSelecting?.Invoke(task);
 
             // avoid stuck on always running processes
