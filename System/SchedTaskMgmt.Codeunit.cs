@@ -14,43 +14,51 @@ namespace Brayns.System
 
         public static event SchedTaskSelectingHandler? TaskSelecting;
 
-        public static void ApplicationInitialize()
+        public static void Cleanup()
         {
-            ScheduledTask schedTask = new();
-            schedTask.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
-            schedTask.RunningServer.SetRange(CurrentSession.Server);
-            if (schedTask.FindSet())
-                while (schedTask.Read())
+            var task = new ScheduledTask();
+
+            // stop request
+            task.Reset();
+            task.Status.SetRange(ScheduledTaskStatus.STOPPING);
+            task.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
+            task.RunningServer.SetRange(CurrentSession.Server);
+            if (task.FindSet())
+                while (task.Read())
                 {
-                    switch (schedTask.Status.Value)
+                    lock (_lockTasks)
                     {
-                        case ScheduledTaskStatus.RUNNING:
-                        case ScheduledTaskStatus.STARTING:
-                            schedTask.Status.Value = ScheduledTaskStatus.DISABLED;
-                            schedTask.Modify();
+                        if (Tasks.ContainsKey(task.EntryNo.Value))
+                            Tasks[task.EntryNo.Value].Stop();
+                        else
+                        {
+                            ClearTask(task);
+                            task.Status.Value = ScheduledTaskStatus.DISABLED;
+                            task.RunOnce.Value = false;
+                            task.Modify();
 
-                            try
-                            {
-                                schedTask.SetEnabled();
+                            ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} stopping, setting disabled", task.Description.Value, task.NextRunTime.Value));
 
-                                if (schedTask.Status.Value == ScheduledTaskStatus.ENABLED)
-                                    ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} was running, next run time {1}", schedTask.Description.Value, schedTask.NextRunTime.Value));
-                            }
-                            catch
-                            {
-                                schedTask.Status.Value = ScheduledTaskStatus.ERROR;
-                                schedTask.RunOnce.Value = false;
-                                schedTask.Modify();
+                            Commit();
+                        }
+                    }
+                }
 
-                                ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} was running, setting in error", schedTask.Description.Value));
-                            }
-                            break;
-
-                        case ScheduledTaskStatus.STOPPING:
-                            schedTask.Status.Value = ScheduledTaskStatus.DISABLED;
-                            schedTask.RunOnce.Value = false;
-                            schedTask.Modify();
-                            break;
+            // running or starting
+            task.Reset();
+            task.Status.SetFilter("{0}|{1}", ScheduledTaskStatus.STARTING, ScheduledTaskStatus.RUNNING);
+            task.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
+            task.RunningServer.SetRange(CurrentSession.Server);
+            if (task.FindSet())
+                while (task.Read())
+                {
+                    lock (_lockTasks)
+                    {
+                        if (!Tasks.ContainsKey(task.EntryNo.Value))
+                        {
+                            HandleError(task, new Error(Label("Unhandled error while task starting or running")));
+                            Commit();
+                        }
                     }
                 }
         }
@@ -81,74 +89,45 @@ namespace Brayns.System
             {
                 _lastEntryNo = task.EntryNo.Value;
 
-                if (!Tasks.ContainsKey(task.EntryNo.Value))
+                lock (_lockTasks)
                 {
-                    task.Status.Value = ScheduledTaskStatus.STARTING;
-                    task.CurrentTry.Value++;
-                    task.RunningServer.Value = CurrentSession.Server;
-                    task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
-                    task.Modify();
-                    Commit();
-
-                    RunningTask rt = new();
-                    rt.Tag = task.EntryNo.Value;
-                    rt.TypeName = task.ObjectName.Value;
-                    rt.MethodName = task.MethodName.Value;
-                    rt.Parameters = task.Parameter.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    rt.Starting += Task_Starting;
-                    rt.Error += Task_Error;
-                    rt.Finishing += Task_Finishing;
-
-                    lock (_lockTasks)
-                        Tasks.Add(task.EntryNo.Value, rt);
-
-                    rt.Start();
-                }
-                else
-                {
-                    if (!Tasks[task.EntryNo.Value].IsAlive)
-                        RemoveFromList(task.EntryNo.Value);
-                    else
+                    if (!Tasks.ContainsKey(task.EntryNo.Value))
                     {
-                        ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} is still running", task.Description.Value));
-
-                        task.Status.Value = ScheduledTaskStatus.RUNNING;
+                        task.Status.Value = ScheduledTaskStatus.STARTING;
+                        task.CurrentTry.Value++;
+                        task.RunningServer.Value = CurrentSession.Server;
+                        task.RunningEnvironment.Value = Shaper.Application.GetEnvironmentName();
                         task.Modify();
                         Commit();
-                    }
-                }
-            }
 
-            // stop request
-            task.Reset();
-            task.Status.SetRange(ScheduledTaskStatus.STOPPING);
-            task.RunningEnvironment.SetRange(Shaper.Application.GetEnvironmentName());
-            task.RunningServer.SetRange(CurrentSession.Server);
-            if (task.FindSet())
-                while (task.Read())
-                {
-                    lock (_lockTasks)
+                        RunningTask rt = new();
+                        rt.Tag = task.EntryNo.Value;
+                        rt.TypeName = task.ObjectName.Value;
+                        rt.MethodName = task.MethodName.Value;
+                        rt.Parameters = task.Parameter.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        rt.Starting += Task_Starting;
+                        rt.Error += Task_Error;
+                        rt.Finishing += Task_Finishing;
+
+                        lock (_lockTasks)
+                            Tasks.Add(task.EntryNo.Value, rt);
+
+                        rt.Start();
+                    }
+                    else
                     {
-                        if (Tasks.ContainsKey(task.EntryNo.Value))
-                            Tasks[task.EntryNo.Value].Stop();
+                        if (!Tasks[task.EntryNo.Value].IsAlive)
+                            Tasks.Remove(task.EntryNo.Value);
                         else
                         {
-                            ClearTask(task);
-                            task.Status.Value = ScheduledTaskStatus.DISABLED;
-                            task.RunOnce.Value = false;
+                            ApplicationLog.Add(ApplicationLogType.WARNING, Label("Task {0} is still running", task.Description.Value));
+
+                            task.Status.Value = ScheduledTaskStatus.RUNNING;
                             task.Modify();
                             Commit();
                         }
                     }
                 }
-        }
-
-        private static void RemoveFromList(int taskNo)
-        {
-            lock (_lockTasks)
-            {
-                if (Tasks.ContainsKey(taskNo))
-                    Tasks.Remove(taskNo);
             }
         }
 
@@ -162,7 +141,12 @@ namespace Brayns.System
         private static void Task_Finishing(RunningTask sender)
         {
             int taskNo = (int)sender.Tag!;
-            RemoveFromList(taskNo);
+
+            lock (_lockTasks)
+            {
+                if (Tasks.ContainsKey(taskNo))
+                    Tasks.Remove(taskNo);
+            }
 
             ScheduledTask task = new();
             task.Get(taskNo);
@@ -171,13 +155,8 @@ namespace Brayns.System
             task.Modify();
         }
 
-        private static void Task_Error(RunningTask sender, Exception ex)
+        private static void HandleError(ScheduledTask task, Exception ex)
         {
-            int taskNo = (int)sender.Tag!;
-            RemoveFromList(taskNo);
-
-            ScheduledTask task = new();
-            task.Get(taskNo);
             ClearTask(task);
 
             if (task.Status.Value == ScheduledTaskStatus.STOPPING)
@@ -205,6 +184,21 @@ namespace Brayns.System
 
                 Commit();
                 TryNotifyError(task, ex);
+            }
+        }
+
+        private static void Task_Error(RunningTask sender, Exception ex)
+        {
+            int taskNo = (int)sender.Tag!;
+
+            lock (_lockTasks)
+            {
+                if (Tasks.ContainsKey(taskNo))
+                    Tasks.Remove(taskNo);
+
+                ScheduledTask task = new();
+                task.Get(taskNo);
+                HandleError(task, ex);
             }
         }
 

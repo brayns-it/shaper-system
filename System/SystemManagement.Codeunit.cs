@@ -29,6 +29,7 @@
 
         private static void Application_Monitoring()
         {
+            SchedTaskMgmt.Cleanup();
             SchedTaskMgmt.RunNext();
 
             CleanupAuthentication();
@@ -124,8 +125,6 @@
             session.Environment.SetRange(Shaper.Application.GetEnvironmentName());
             session.Server.SetRange(CurrentSession.Server);
             session.DeleteAll();
-
-            SchedTaskMgmt.ApplicationInitialize();
 
             CleanupAuthentication();
             _isInitializated = true;
