@@ -146,13 +146,13 @@ namespace Brayns.System
             {
                 if (Tasks.ContainsKey(taskNo))
                     Tasks.Remove(taskNo);
-            }
 
-            ScheduledTask task = new();
-            task.Get(taskNo);
-            ClearTask(task);
-            task.SetEnabled();
-            task.Modify();
+                ScheduledTask task = new();
+                task.Get(taskNo);
+                ClearTask(task);
+                task.SetEnabled();
+                task.Modify();
+            }
         }
 
         private static void HandleError(ScheduledTask task, Exception ex)
