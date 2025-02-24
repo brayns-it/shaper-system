@@ -42,6 +42,11 @@
 
                         var actAuth = new Controls.Action(grpAdmin, Label("Authentication"), Icon.FromName("fas fa-user-lock"));
                         {
+                            new Controls.Action(actAuth, Label("Credentials"), Icon.FromName("fas fa-unlock"))
+                            {
+                                Run = typeof(CredentialList)
+                            };
+
                             new Controls.Action(actAuth, Label("Devices"), Icon.FromName("fas fa-laptop"))
                             {
                                 Run = typeof(DeviceList)
@@ -88,6 +93,11 @@
                             new Controls.Action(actSystem, Label("Mail"), Icon.FromName("fas fa-envelope"))
                             {
                                 Run = typeof(MailSetupList)
+                            };
+
+                            new Controls.Action(actSystem, Label("Print"), Icon.FromName("fas fa-print"))
+                            {
+                                Run = typeof(PrintSetupList)
                             };
 
                             new Controls.Action(actSystem, Label("Setup"), Icon.FromName("fas fa-wrench"))
