@@ -38,7 +38,7 @@ namespace Brayns.System
                     mds.Tables.Add((DataTable)Datasets[ds]);
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        mds.WriteXml(ms);
+                        mds.WriteXml(ms, XmlWriteMode.WriteSchema);
                         result.Add(ds, Convert.ToBase64String(ms.ToArray()));
                     }
                 }
