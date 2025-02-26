@@ -66,6 +66,18 @@ namespace Brayns.System
                 throw Setup.ErrorNotFound();
         }
 
+        public void PrintReport(PrintReport report, string printerName)
+        {
+            JObject jRequest = new();
+            jRequest["request"] = "render";
+            jRequest["device"] = "printer://" + printerName;
+            jRequest["report"] = report.GetDefinition();
+            jRequest["format"] = "RDL";
+            report.GetDatasets(jRequest);
+
+            Execute(jRequest);
+        }
+
         public void RenderReport(PrintReport report, string destination)
         {
             byte[] buf = RenderReport(report);
@@ -115,7 +127,7 @@ namespace Brayns.System
             var jRes = JObject.Parse(sr.ReadToEnd());
             sr.Close();
 
-            if (jRes["status"]!.ToString() != "success")
+            if (jRes["status"]!.ToString() == "error")
                 throw new Exception(jRes["message"]!.ToString());
 
             if (jRes.ContainsKey("result"))
