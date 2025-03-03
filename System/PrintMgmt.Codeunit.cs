@@ -66,6 +66,18 @@ namespace Brayns.System
                 throw Setup.ErrorNotFound();
         }
 
+        public void SaveReport(PrintReport report, string pathName)
+        {
+            JObject jRequest = new();
+            jRequest["request"] = "render";
+            jRequest["device"] = "file://" + pathName;
+            jRequest["report"] = report.GetDefinition();
+            jRequest["format"] = "RDL";
+            report.GetDatasets(jRequest);
+
+            Execute(jRequest);
+        }
+
         public void PrintReport(PrintReport report, string printerName)
         {
             JObject jRequest = new();
