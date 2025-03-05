@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace Brayns.System
+﻿namespace Brayns.System
 {
     public class MailSetupCard : Page<MailSetupCard, MailSetup>
     {
@@ -26,10 +24,19 @@ namespace Brayns.System
                 {
                     new Controls.Field(smtp, Rec.SmtpServer);
                     new Controls.Field(smtp, Rec.SmtpPort);
-                    new Controls.Field(smtp, Rec.SmtpUser);
-                    new Controls.Field(smtp, Rec.SmtpPassword) { InputType = Controls.InputType.Password };
                     new Controls.Field(smtp, Rec.SmtpSender);
+                    new Controls.Field(smtp, Rec.SmtpSenderName);
                     new Controls.Field(smtp, Rec.SmtpUseTls);
+                }
+
+                var auth = new Controls.Group(content, "auth", Label("Authentication"));
+                {
+                    new Controls.Field(auth, Rec.Authentication);
+                    new Controls.Field(auth, Rec.SmtpUser);
+                    new Controls.Field(auth, Rec.SmtpPassword) { InputType = Controls.InputType.Password };
+                    new Controls.Field(auth, Rec.ClientID);
+                    new Controls.Field(auth, Rec.TenantID);
+                    new Controls.Field(auth, Rec.ClientSecret) { InputType = Controls.InputType.Password };
                 }
 
                 var test = new Controls.Group(content, "test", Label("Test"));
@@ -44,14 +51,11 @@ namespace Brayns.System
 
         private void TestSend_Triggering()
         {
-            var mailMgmt = new MailMgmt();
-            mailMgmt.SetProfile(Rec.ProfileCode.Value);
-
-            mailMgmt.Message.From = new MailAddress(Rec.SmtpSender.Value);
-            mailMgmt.Message.To.Add(new MailAddress(TestAddress.Value));
-            mailMgmt.Message.Subject = Label("Test mail from {0}", CurrentSession.ApplicationName);
-            mailMgmt.Message.Body = Label("Test mail from {0} sent via {1}", CurrentSession.ApplicationName, Rec.Description.Value);
-
+            var mailMgmt = new MailMgmt(Rec.ProfileCode.Value);
+            mailMgmt.From = new(Rec.SmtpSender.Value, Rec.SmtpSenderName.Value);
+            mailMgmt.To.Add(TestAddress.Value);
+            mailMgmt.Subject = Label("Test mail from {0}", CurrentSession.ApplicationName);
+            mailMgmt.HtmlBody = Label("Test mail from {0} sent via {1}", CurrentSession.ApplicationName, Rec.Description.Value);
             mailMgmt.Send();
 
             Message.Show(Label("Mail message sent successfully"));

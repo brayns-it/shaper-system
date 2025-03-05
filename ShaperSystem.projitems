@@ -20,5 +20,6 @@
   <ItemGroup>
     <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
     <PackageReference Include="SimpleImpersonation" Version="4.2.0" />
+    <PackageReference Include="MailKit" Version="4.1.0" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Net.Mail;
 
 namespace Brayns.System
 {
-    public delegate void SchedTaskNotifyHandler(MailMessage msg);
+    public delegate void SchedTaskNotifyHandler(MailMgmt msg);
     public delegate void SchedTaskSelectingHandler(ScheduledTask task);
 
     public class SchedTaskMgmt : Codeunit
@@ -217,19 +217,15 @@ namespace Brayns.System
                 schedSetup.Get();
                 if (!schedSetup.NotifyIfError.Value) return;
 
-                var mailMgmt = new MailMgmt();
-                if (schedSetup.MailProfile.Value.Length > 0)
-                    mailMgmt.SetProfile(schedSetup.MailProfile.Value);
-
+                var mailMgmt = new MailMgmt(schedSetup.MailProfile.Value);
                 if (schedSetup.MailSenderAddress.Value.Length > 0)
-                    mailMgmt.Message.From = new MailAddress(schedSetup.MailSenderAddress.Value);
+                    mailMgmt.From = new(schedSetup.MailSenderAddress.Value);
 
-                mailMgmt.Message.To.Add(new MailAddress(schedSetup.MailRecipientAddress.Value));
-                mailMgmt.Message.Subject = Label("Error in {0}", CurrentSession.ApplicationName);
-                mailMgmt.Message.IsBodyHtml = true;
-                mailMgmt.Message.Body = "<p><b>" + fe.Message + "</b></p><pre>" + string.Join("\r\n", fe.Trace.ToArray()) + "</pre>";
+                mailMgmt.To.Add(schedSetup.MailRecipientAddress.Value);
+                mailMgmt.Subject = Label("Error in {0}", CurrentSession.ApplicationName);
+                mailMgmt.HtmlBody = "<p><b>" + fe.Message + "</b></p><pre>" + string.Join("\r\n", fe.Trace.ToArray()) + "</pre>";
 
-                onMessage?.Invoke(mailMgmt.Message);
+                onMessage?.Invoke(mailMgmt);
 
                 mailMgmt.Send();
             }

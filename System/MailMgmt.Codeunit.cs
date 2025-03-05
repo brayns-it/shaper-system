@@ -1,26 +1,54 @@
-﻿using System.Net;
-using System.Net.Mail;
+﻿using MailKit;
+using MailKit.Net.Imap;
+using MailKit.Security;
+using Microsoft.Identity.Client;
 
 namespace Brayns.System
 {
+    public class MailAddress
+    {
+        public string Address { get; set; } = "";
+        public string Name { get; set; } = "";
+
+        public MailAddress(string address = "", string name = "")
+        {
+            Address = address;
+            Name = name;
+        }
+    }
+
+    public class MailAddressCollection : List<MailAddress>
+    {
+        public void Add(string address)
+        {
+            Add(new MailAddress(address));
+        }
+
+        public void Add(string address, string name)
+        {
+            Add(new MailAddress(address, name));
+        }
+    }
+
     public class MailMgmt : Codeunit
     {
         public MailSetup Setup { get; private set; }
-        public MailMessage Message { get; set; }
+        public MailAddress From { get; set; } = new();
+        public string Subject { get; set; } = "";
+        public MailAddressCollection To { get; } = new();
+        public MailAddressCollection Cc { get; } = new();
+        public string HtmlBody { get; set; } = "";
 
-        public MailMgmt()
+        public MailMgmt(string code = "")
         {
             Setup = new MailSetup();
-            Setup.Default.SetRange(true);
+            if (code.Length == 0)
+                Setup.Default.SetRange(true);
+            else
+                Setup.ProfileCode.SetRange(code);
             Setup.FindFirst();
 
-            Message = new();
-        }
-
-        public void SetProfile(string code)
-        {
-            if (!Setup.Get(code))
-                Setup.Init();
+            From = new MailAddress(Setup.SmtpSender.Value, Setup.SmtpSenderName.Value);
         }
 
         public void Send()
@@ -36,33 +64,54 @@ namespace Brayns.System
             }
         }
 
-        private bool HasHeader(string key)
+        private void AuthenticateSmtp(MailKit.Net.Smtp.SmtpClient client)
         {
-            foreach (string hdr in Message.Headers.Keys)
-                if (hdr.Equals(key, StringComparison.OrdinalIgnoreCase))
-                    return true;
+            switch (Setup.Authentication.Value)
+            {
+                case MailSetupAuthentication.PLAIN:
+                    client.Authenticate(Setup.SmtpUser.Value, Functions.DecryptString(Setup.SmtpPassword.Value));
+                    break;
 
-            return false;
+                case MailSetupAuthentication.O365_OAUTH:
+                    var confApp = ConfidentialClientApplicationBuilder.Create(Setup.ClientID.Value)
+                        .WithAuthority("https://login.microsoftonline.com/" + Setup.TenantID.Value + "/v2.0")
+                        .WithClientSecret(Functions.DecryptString(Setup.ClientSecret.Value))
+                        .Build();
+
+                    var scopes = new string[] { "https://outlook.office365.com/.default" };
+                    var authToken = confApp.AcquireTokenForClient(scopes).ExecuteAsync().Result;
+                    client.Authenticate(new SaslMechanismOAuth2(Setup.SmtpUser.Value, authToken.AccessToken));
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         private void SendSmtp()
         {
             Setup.SmtpServer.Test();
 
-            var client = new SmtpClient(Setup.SmtpServer.Value);
-            if (Setup.SmtpPort.Value > 0) client.Port = Setup.SmtpPort.Value;
-            if (Setup.SmtpUseTls.Value) client.EnableSsl = true;
+            MimeKit.MimeMessage message = new();
+            message.From.Add(new MimeKit.MailboxAddress(From.Name, From.Address));
+            message.Sender = new(From.Name, From.Address);
 
-            if (Setup.SmtpUser.Value.Length > 0)
-                client.Credentials = new NetworkCredential(Setup.SmtpUser.Value, Functions.DecryptString(Setup.SmtpPassword.Value));
+            foreach (var addr in To)
+                message.To.Add(new MimeKit.MailboxAddress(addr.Name, addr.Address));
 
-            if ((Message.From == null) && (Setup.SmtpSender.Value.Length > 0))
-                Message.From = new MailAddress(Setup.SmtpSender.Value);
+            foreach (var addr in Cc)
+                message.Cc.Add(new MimeKit.MailboxAddress(addr.Name, addr.Address));
 
-            if (!HasHeader("Message-ID"))
-                Message.Headers.Add("Message-ID", "<" + Guid.NewGuid().ToString("n") + "@" + CurrentSession.Server + ">");
+            message.Subject = Subject;
+            message.Body = new MimeKit.TextPart("html", HtmlBody);
 
-            client.Send(Message);
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                client.Connect(Setup.SmtpServer.Value, Setup.SmtpUseTls.Value ? 587 : 25, Setup.SmtpUseTls.Value ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                AuthenticateSmtp(client);
+                client.Send(message);
+                client.Disconnect(true);
+            }
         }
 
     }
