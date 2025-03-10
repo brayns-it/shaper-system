@@ -19,6 +19,12 @@
 
                 var userCenter = Controls.UserCenter.Create(appCenter);
                 {
+                    var actProfile = new Controls.Action(userCenter, Label("Profile"), Icon.FromName("fas fa-user"))
+                    {
+                        Run = typeof(ProfileCard),
+                        RunAsPrincipal = true
+                    };
+
                     var actLogout = new Controls.Action(userCenter, Label("Logout"), Icon.FromName("fas fa-sign-out-alt"));
                     actLogout.Triggering += ActionLogout_Triggering;
                 }

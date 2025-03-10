@@ -37,6 +37,7 @@ namespace Brayns.System
         public string Subject { get; set; } = "";
         public MailAddressCollection To { get; } = new();
         public MailAddressCollection Cc { get; } = new();
+        public MailAddressCollection Bcc { get; } = new();
         public string HtmlBody { get; set; } = "";
 
         public MailMgmt(string code = "")
@@ -49,6 +50,19 @@ namespace Brayns.System
             Setup.FindFirst();
 
             From = new MailAddress(Setup.SmtpSender.Value, Setup.SmtpSenderName.Value);
+        }
+
+        public bool TrySend()
+        {
+            try
+            {
+                Send();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void Send()
@@ -102,12 +116,18 @@ namespace Brayns.System
             foreach (var addr in Cc)
                 message.Cc.Add(new MimeKit.MailboxAddress(addr.Name, addr.Address));
 
+            foreach (var addr in Bcc)
+                message.Bcc.Add(new MimeKit.MailboxAddress(addr.Name, addr.Address));
+
             message.Subject = Subject;
             message.Body = new MimeKit.TextPart("html", HtmlBody);
 
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
-                client.Connect(Setup.SmtpServer.Value, Setup.SmtpUseTls.Value ? 587 : 25, Setup.SmtpUseTls.Value ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                int port = Setup.SmtpPort.Value;
+                if (port == 0) port = Setup.SmtpUseTls.Value ? 587 : 25;
+
+                client.Connect(Setup.SmtpServer.Value, port, Setup.SmtpUseTls.Value ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
                 AuthenticateSmtp(client);
                 client.Send(message);
                 client.Disconnect(true);

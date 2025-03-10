@@ -13,7 +13,7 @@
 
             var content = Controls.ContentArea.Create(this);
             {
-                var form = new Controls.Group(content);
+                var form = new Controls.Group(content, "form", "");
                 {
                     form.Primary = true;
                     form.LabelStyle = Controls.LabelStyle.Vertical;

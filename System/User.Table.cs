@@ -22,6 +22,7 @@
         public Fields.Code AuthenticationProvider { get; } = new("Authentication provider", Label("Authentication provider"), 10);
         public Fields.Text AuthenticationID { get; } = new("Authentication ID", Label("Authentication ID"), 100);
         public Fields.Text StartPageName { get; } = new("Start page name", Label("Start page name"), 250);
+        public Fields.Boolean ComplexPassword { get; } = new("Complex password", Label("Complex password"));
 
         public event GenericHandler? PasswordBeforeHashing;
 
@@ -39,6 +40,14 @@
         private void Password_Validating()
         {
             PasswordBeforeHashing?.Invoke();
+
+            if (ComplexPassword.Value)
+            {
+                var authMgmt = new AuthenticationManagement();
+                if (!authMgmt.IsComplexPassword(Password.Value, 8))
+                    throw new Error(Label("Password does not meet complexity requirements"));
+            }
+
             Password.Value = HashPassword(Password.Value);
         }
 

@@ -19,6 +19,65 @@ namespace Brayns.System
 
     public class AuthenticationManagement : Codeunit
     {
+        private const string PWD_DICT_A = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string PWD_DICT_N = "0123456789";
+        private const string PWD_DICT_S = "@$#!";
+
+        public bool IsComplexPassword(string password, int minLen)
+        {
+            if (password.Trim().Length < minLen) return false;
+
+            bool ok = false;
+            for (int i = 0; i < PWD_DICT_A.Length; i++)
+                if (password.Contains(PWD_DICT_A[i]))
+                {
+                    ok = true;
+                    break;
+                }
+            if (!ok) return false;
+
+            ok = false;
+            for (int i = 0; i < PWD_DICT_N.Length; i++)
+                if (password.Contains(PWD_DICT_N[i]))
+                {
+                    ok = true;
+                    break;
+                }
+            if (!ok) return false;
+
+            ok = false;
+            for (int i = 0; i < PWD_DICT_S.Length; i++)
+                if (password.Contains(PWD_DICT_S[i]))
+                {
+                    ok = true;
+                    break;
+                }
+            if (!ok) return false;
+
+            return true;
+        }
+
+        public string GetRandomPassword(int len)
+        {
+            Random rnd = new();
+
+            List<char> chars = new();
+            chars.Add(PWD_DICT_N[rnd.Next(0, PWD_DICT_N.Length)]);
+            chars.Add(PWD_DICT_S[rnd.Next(0, PWD_DICT_S.Length)]);
+            for (int i = 0; i < (len - 2); i++)
+                chars.Add(PWD_DICT_A[rnd.Next(0, PWD_DICT_A.Length)]);
+
+            string result = "";
+            while (chars.Count > 0)
+            {
+                int n = rnd.Next(0, chars.Count);
+                result += chars[n];
+                chars.RemoveAt(n);
+            }
+
+            return result;
+        }
+
         public bool ValidateActiveDirectory(string username, string password, string serverName)
         {
             LdapDirectoryIdentifier identifier = new LdapDirectoryIdentifier(serverName, 636);
@@ -178,7 +237,7 @@ namespace Brayns.System
 
             if ((CurrentSession.UserId.Length > 0) && (!Shaper.Loader.Permissions.Exists()))
                 LoadPermissions();
-                        
+
             return true;
         }
 

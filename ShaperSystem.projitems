@@ -9,7 +9,58 @@
     <Import_RootNamespace>ShaperSystem</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ApplicationLog.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ApplicationLogList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Authentication.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\AuthenticationManagement.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\AuthenticationProvider.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\AuthenticationProviderCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\AuthenticationProviderList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ClientManagement.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Credential.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\CredentialCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\CredentialList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\CredentialMgmt.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\DeviceList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Information.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\InformationCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Login.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\MailMgmt.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\MailSetup.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\MailSetupCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\MailSetupList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Notification.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\PrintMgmt.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\PrintSetup.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\PrintSetupCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\PrintSetupList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Profile.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Role.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\RoleCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\RoleDetail.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\RoleDetailCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\RoleDetailList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\RoleList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\SchedTaskMgmt.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ScheduledTask.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ScheduledTaskCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ScheduledTaskList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ScheduledTaskSetup.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ScheduledTaskSetupCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Session.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\SessionList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Start.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\SystemManagement.Codeunit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\TokenList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Upgrades.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\User.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\UserCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\UserList.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\UserRole.Table.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\UserRoleCard.Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\UserRoleList.Page.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
