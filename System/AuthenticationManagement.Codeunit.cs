@@ -114,6 +114,7 @@ namespace Brayns.System
             {
                 if (user.Password.Value == "plain:" + password)
                 {
+                    user.SkipComplexityCheck = true;
                     user.Password.Validate(password);
                     user.Modify();
                 }

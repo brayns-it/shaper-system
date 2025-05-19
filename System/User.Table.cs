@@ -11,6 +11,8 @@
 
     public partial class User : Table<User>
     {
+        public bool SkipComplexityCheck { get; set; } = false;
+
         public Fields.Code ID { get; } = new("ID", Label("ID"), 50);
         public Fields.Text Name { get; } = new("Name", Label("Name"), 50);
         public Fields.Text EMail { get; } = new("E-Mail", Label("E-Mail"), 100);
@@ -41,7 +43,7 @@
         {
             PasswordBeforeHashing?.Invoke();
 
-            if (ComplexPassword.Value)
+            if (ComplexPassword.Value && (!SkipComplexityCheck)) 
             {
                 var authMgmt = new AuthenticationManagement();
                 if (!authMgmt.IsComplexPassword(Password.Value, 8))
